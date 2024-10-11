@@ -38,98 +38,67 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/login/css/bootstrap.min.css">
-    <title>Login</title>
-
-    <style>
-
-        .divider:after,
-        .divider:before {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: #eee;
-        }
-        .h-custom {
-        height: calc(100% - 73px);
-        }
-        @media (max-width: 450px) {
-        .h-custom {
-        height: 100%;
-        }
-        }
-
-    </style>
-
-</head>
-<body>
-    <section class="vh-100">
-    <div class="container-fluid h-custom">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-md-9 col-lg-6 col-xl-5">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-            class="img-fluid" alt="Sample image">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Breeze Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="assets/css/vertical-light-layout/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth">
+          <div class="row flex-grow">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left p-5">
+                <div class="brand-logo">
+                  <img src="assets/images/logo.svg">
+                </div>
+                <h4>Hello! let's get started</h4>
+                <h6 class="font-weight-light">Sign in to continue.</h6>
+                <form class="pt-3" method="POST">
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password">
+                  </div>
+                  <div class="mt-3 d-grid gap-2">
+                    <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" name="login" type="submit">SIGN IN</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-            <form method="POST">
-            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                <p class="lead fw-normal mb-0 me-3">Sign in</p>
-            </div>
-            <!-- Email input -->
-            <div data-mdb-input-init class="form-outline mb-4 mt-2">
-                <label class="form-label" for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control form-control-lg"
-                placeholder="Enter username" />
-            </div>
-
-            <!-- Password input -->
-            <div data-mdb-input-init class="form-outline mb-3">
-                <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control form-control-lg"
-                placeholder="Enter password" />
-            </div>
-
-
-            <div class="text-center text-lg-start mt-4 pt-2">
-                <button  type="submit" name="login" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
-                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-            </div>
-
-            </form>
-        </div>
-        </div>
+        <!-- content-wrapper ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
     </div>
-    <div
-        class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-        <!-- Copyright -->
-        <div class="text-white mb-3 mb-md-0">
-        Copyright © 2020. All rights reserved.
-        </div>
-        <!-- Copyright -->
-
-        <!-- Right -->
-        <div>
-        <a href="#!" class="text-white me-4">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#!" class="text-white me-4">
-            <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#!" class="text-white me-4">
-            <i class="fab fa-google"></i>
-        </a>
-        <a href="#!" class="text-white">
-            <i class="fab fa-linkedin-in"></i>
-        </a>
-        </div>
-        <!-- Right -->
-    </div>
-    </section>
-
-    <script src="assets/login/js/bootstrap.bundle.min.js"></script>
-
-</body>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="assets/js/off-canvas.js"></script>
+    <script src="assets/js/hoverable-collapse.js"></script>
+    <script src="assets/js/misc.js"></script>
+    <script src="assets/js/settings.js"></script>
+    <script src="assets/js/todolist.js"></script>
+    <!-- endinject -->
+  </body>
 </html>

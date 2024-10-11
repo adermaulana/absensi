@@ -39,47 +39,27 @@ if($_SESSION['status'] != 'login'){
   </head>
   <body>
     <div class="container-scroller">
-      <div class="row p-0 m-0 proBanner" id="proBanner">
-        <div class="col-md-12 p-0 m-0">
-          <div class="card-body card-body-padding d-flex align-items-center justify-content-between">
-            <div class="ps-lg-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <p class="mb-0 font-weight-medium me-3 buy-now-text">Free 24/7 customer support, updates, and more with this template!</p>
-                <a href="https://www.bootstrapdash.com/product/breeze-bootstrap-admin-template/" target="_blank" class="btn me-2 buy-now-btn border-0">Buy Now</a>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <a href="https://www.bootstrapdash.com/product/breeze-bootstrap-admin-template/"><i class="mdi mdi-home me-3 text-white"></i></a>
-              <button id="bannerClose" class="btn border-0 p-0">
-                <i class="mdi mdi-close text-white"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
-    <a class="sidebar-brand brand-logo" href="index.html"><img src="../../../assets/images/logo.svg" alt="logo" /></a>
-    <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo" href="index.html"><img src="../assets/images/logo.svg" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
   </div>
   <ul class="nav">
     <li class="nav-item nav-profile">
       <a href="#" class="nav-link">
         <div class="nav-profile-image">
-          <img src="../../../assets/images/faces/face1.jpg" alt="profile">
+          <img src="../assets/images/faces/face1.jpg" alt="profile">
           <span class="login-status online"></span>
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column pe-3">
-          <span class="font-weight-medium mb-2">Henry Klein</span>
-          <span class="font-weight-normal">$8,753.00</span>
+          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
         </div>
-        <span class="badge badge-danger text-white ms-3 rounded">3</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="index.html">
+      <a class="nav-link" href="index.php">
         <i class="mdi mdi-home menu-icon"></i>
         <span class="menu-title">Dashboard</span>
       </a>
@@ -87,98 +67,47 @@ if($_SESSION['status'] != 'login'){
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-        <span class="menu-title">Basic UI Elements</span>
+        <span class="menu-title">Siswa</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">          
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+          <!-- <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
+          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li> -->
         </ul>
       </div>
     </li>        
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Icons</span>
+        <span class="menu-title">Kelas</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="icons">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/icons/font-awesome.html">Font Awesome</a></li>                            
+          <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>                            
+          <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>                            
         </ul>
       </div>
     </li>
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
         <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-        <span class="menu-title">Forms</span>
+        <span class="menu-title">Absensi</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="forms">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/forms/basic_elements.html">Form Elements</a></li>          
+          <!-- <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>          
+          <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a></li>           -->
         </ul>
       </div>
     </li>    
     <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-        <i class="mdi mdi-chart-bar menu-icon"></i>
-        <span class="menu-title">Charts</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="charts">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a></li>
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-        <i class="mdi mdi-table-large menu-icon"></i>
-        <span class="menu-title">Tables</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="tables">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Basic table</a></li>
-        </ul>
-      </div>
-    </li>    
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-        <i class="mdi mdi-lock menu-icon"></i>
-        <span class="menu-title">User Pages</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="auth">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>          
-          <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>                    
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="docs/documentation.html">
+      <a class="nav-link" href="laporan.php">
         <i class="mdi mdi-file-document-box menu-icon"></i>
-        <span class="menu-title">Documentation</span>
+        <span class="menu-title">Laporan</span>
       </a>
-    </li>
-    <li class="nav-item sidebar-actions">
-      <div class="nav-link">
-        <div class="mt-4">
-          <div class="border-none">
-            <p class="text-black">Notification</p>
-          </div>
-          <ul class="mt-4 ps-0">
-            <li>Sign Out</li>
-          </ul>
-        </div>
-      </div>
     </li>
   </ul>
 </nav>
@@ -191,105 +120,13 @@ if($_SESSION['status'] != 'login'){
     <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
       <i class="mdi mdi-menu"></i>
     </button>
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-          <i class="mdi mdi-bell-outline"></i>
-          <span class="count count-varient1">7</span>
-        </a>
-        <div class="dropdown-menu navbar-dropdown navbar-dropdown-large preview-list" aria-labelledby="notificationDropdown">
-          <h6 class="p-3 mb-0 ">Notifications</h6>
-          <a class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <img src="../../../assets/images/faces/face4.jpg" alt="" class="profile-pic">
-            </div>
-            <div class="preview-item-content">
-              <p class="mb-0">Dany Miles <span class="text-small text-muted">commented on your photo</span></p>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <img src="../../../assets/images/faces/face3.jpg" alt="" class="profile-pic">
-            </div>
-            <div class="preview-item-content">
-              <p class="mb-0">James <span class="text-small text-muted">posted a photo on your wall</span></p>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item">
-            <div class="preview-thumbnail">
-              <img src="../../../assets/images/faces/face2.jpg" alt="" class="profile-pic">
-            </div>
-            <div class="preview-item-content">
-              <p class="mb-0">Alex <span class="text-small text-muted">just mentioned you in his post</span></p>
-            </div>
-          </a>
-          <div class="dropdown-divider"></div>
-          <p class="p-3 mb-0 ">View all activities</p>
-        </div>
-      </li>
-      <li class="nav-item dropdown d-none d-sm-flex">
-        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown">
-          <i class="mdi mdi-email-outline"></i>
-          <span class="count  count-varient2">5</span>
-        </a>
-        <div class="dropdown-menu navbar-dropdown navbar-dropdown-large preview-list" aria-labelledby="messageDropdown">
-          <h6 class="p-3 mb-0 ">Messages</h6>
-          <a class="dropdown-item preview-item">
-            <div class="preview-item-content flex-grow">
-              <span class="badge badge-pill badge-success">Request</span>
-              <p class="text-small text-muted ellipsis mb-0"> Suport needed for user123 </p>
-            </div>
-            <p class="text-small text-muted align-self-start">4:10 PM</p>
-          </a>
-          <a class="dropdown-item preview-item">
-            <div class="preview-item-content flex-grow">
-              <span class="badge badge-pill badge-warning">Invoices</span>
-              <p class="text-small text-muted ellipsis mb-0"> Invoice for order is mailed </p>
-            </div>
-            <p class="text-small text-muted align-self-start">4:10 PM</p>
-          </a>
-          <a class="dropdown-item preview-item">
-            <div class="preview-item-content flex-grow">
-              <span class="badge badge-pill badge-danger">Projects</span>
-              <p class="text-small text-muted ellipsis mb-0"> New project will start tomorrow </p>
-            </div>
-            <p class="text-small text-muted align-self-start">4:10 PM</p>
-          </a>
-          <h6 class="p-3 mb-0 ">See all activity</h6>
-        </div>
-      </li>
-      <li class="nav-item nav-search border-0 ms-1 ms-md-3 ms-lg-5 d-none d-md-flex">
-        <form class="nav-link form-inline mt-2 mt-md-0">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="mdi mdi-magnify"></i>
-              </span>
-            </div>
-          </div>
-        </form>
-      </li>
-    </ul>
     <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-      <li class="nav-item dropdown d-none d-xl-flex border-0">
-        <a class="nav-link dropdown-toggle" id="languageDropdown" href="#" data-bs-toggle="dropdown">
-          <i class="mdi mdi-earth"></i> English </a>
-        <div class="dropdown-menu navbar-dropdown" aria-labelledby="languageDropdown">
-          <a class="dropdown-item" href="#"> French </a>
-          <a class="dropdown-item" href="#"> Spain </a>
-          <a class="dropdown-item" href="#"> Latin </a>
-          <a class="dropdown-item" href="#"> Japanese </a>
-        </div>
-      </li>
       <li class="nav-item  nav-profile dropdown border-0">
         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-          <img class="nav-profile-img me-2" alt="" src="../../../assets/images/faces/face1.jpg">
-          <span class="profile-name">Henry Klein</span>
+          <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
+          <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
         </a>
         <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-          <a class="dropdown-item" href="#">
-            <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
           <a class="dropdown-item" href="logout.php">
             <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
         </div>
@@ -306,13 +143,6 @@ if($_SESSION['status'] != 'login'){
             <div class="page-header flex-wrap">
               <h3 class="mb-0">Hi, welcome back! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block">Your web analytics dashboard template.</span>
               </h3>
-              <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ms-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ms-3 btn-success"> Add User</button>
-              </div>
             </div>
             <div class="row">
               <div class="col-xl-3 col-lg-12 stretch-card grid-margin">
