@@ -17,6 +17,9 @@
         $login = mysqli_query($koneksi, "SELECT * FROM admin WHERE username='$username' and password='$password'");
         $cek = mysqli_num_rows($login);
 
+        $loginSiswa = mysqli_query($koneksi, "SELECT * FROM siswa WHERE username='$username' and password='$password'");
+        $cekSiswa = mysqli_num_rows($loginSiswa);
+
         if($cek > 0) {
             $admin_data = mysqli_fetch_assoc($login);
             $_SESSION['id_admin'] = $admin_data['id'];
@@ -25,7 +28,15 @@
             $_SESSION['status'] = "login";
             header('location:admin');
 
-        }  else {
+        } else if ($cekSiswa > 0) {
+          $admin_data = mysqli_fetch_assoc($loginSiswa);
+          $_SESSION['id_siswa'] = $admin_data['id'];
+          $_SESSION['nama_siswa'] = $admin_data['nama'];
+          $_SESSION['username_siswa'] = $username;
+          $_SESSION['status'] = "login";
+          header('location:siswa');
+
+      }  else {
             echo "<script>
             alert('Login Gagal, Periksa Username dan Password Anda!');
             header('location:index.php');

@@ -115,38 +115,83 @@ if($_SESSION['status'] != 'login'){
       <div class="container-fluid page-body-wrapper">        
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
-  <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-    <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
-    <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
-      <i class="mdi mdi-menu"></i>
-    </button>
-    <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-      <li class="nav-item  nav-profile dropdown border-0">
-        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-          <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-          <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
-        </a>
-        <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-          <a class="dropdown-item" href="logout.php">
-            <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-        </div>
-      </li>
-    </ul>
-    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-      <span class="mdi mdi-menu"></span>
-    </button>
-  </div>
-</nav>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+                <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+                <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
+                <i class="mdi mdi-menu"></i>
+                </button>
+                <ul class="navbar-nav navbar-nav-right ml-lg-auto">
+                <li class="nav-item  nav-profile dropdown border-0">
+                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+                    <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
+                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+                    </a>
+                    <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="logout.php">
+                        <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                    </div>
+                </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+            </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper pb-0">
-            <div class="page-header flex-wrap">
-              <h3 class="mb-0">Hi, Selamat Datang! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block"><?= $_SESSION['nama_admin'] ?></span>
-              </h3>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Absensi</h3>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Data Absensi</h4>
+                    <a class="btn btn-success" href="tambahabsensi.php">Tambah Data</a>
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Nama Siswa</th>
+                            <th>Kelas</th>
+                            <th>Status</th>
+                            <th>Keterangan</th>
+                            <th>Waktu Absensi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $no = 1;
+                            $tampil = mysqli_query($koneksi, "SELECT a.*, s.nama as nama_siswa, k.kelas
+                                                            FROM absensi a
+                                                            JOIN siswa s ON a.id_siswa = s.id
+                                                            JOIN kelas k  ON a.id_kelas = k.id");
+                            while($data = mysqli_fetch_array($tampil)):
+                        ?>
+                          <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= $data['nama_siswa'] ?></td>
+                            <td><?= $data['kelas'] ?></td>
+                            <td><?= $data['status'] ?></td>
+                            <td><?= $data['keterangan'] ?></td>
+                            <td><?= $data['waktu_absen'] ?></td>
+                          </tr>
+                          <?php
+                            endwhile; 
+                        ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
+          <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
   <div class="d-sm-flex justify-content-center justify-content-sm-between">
     <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>

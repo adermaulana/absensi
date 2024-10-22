@@ -115,8 +115,8 @@ if(isset($_POST['simpan'])){
       </a>
       <div class="collapse" id="forms">
         <ul class="nav flex-column sub-menu">
-          <!-- <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>          
-          <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a></li>           -->
+          <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>          
+          <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a></li>          
         </ul>
       </div>
     </li>    

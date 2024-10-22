@@ -21,7 +21,7 @@ if($_SESSION['status'] != 'login'){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Siswa</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -54,7 +54,7 @@ if($_SESSION['status'] != 'login'){
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column pe-3">
-          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
+          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_siswa'] ?></span>
         </div>
       </a>
     </li>
@@ -65,32 +65,6 @@ if($_SESSION['status'] != 'login'){
       </a>
     </li>        
     <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-        <span class="menu-title">Siswa</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">          
-          <!-- <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li> -->
-        </ul>
-      </div>
-    </li>        
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-        <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Kelas</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="icons">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>                            
-          <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>                            
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
         <i class="mdi mdi-format-list-bulleted menu-icon"></i>
         <span class="menu-title">Absensi</span>
@@ -99,7 +73,6 @@ if($_SESSION['status'] != 'login'){
       <div class="collapse" id="forms">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>          
-          <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a></li>          
         </ul>
       </div>
     </li>    
@@ -124,7 +97,7 @@ if($_SESSION['status'] != 'login'){
       <li class="nav-item  nav-profile dropdown border-0">
         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
           <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-          <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+          <span class="profile-name"><?= $_SESSION['nama_siswa'] ?></span>
         </a>
         <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
           <a class="dropdown-item" href="logout.php">
@@ -141,7 +114,7 @@ if($_SESSION['status'] != 'login'){
         <div class="main-panel">
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
-              <h3 class="mb-0">Hi, Selamat Datang! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block"><?= $_SESSION['nama_admin'] ?></span>
+              <h3 class="mb-0">Hi, Selamat Datang! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block"><?= $_SESSION['nama_siswa'] ?></span>
               </h3>
             </div>
           </div>

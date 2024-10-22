@@ -13,6 +13,23 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_POST['simpan'])){
+    $simpan = mysqli_query($koneksi, "INSERT INTO absensi (id_siswa, id_kelas, status, keterangan, waktu_absen
+) VALUES ('$_POST[id_siswa]','$_POST[id_kelas]','$_POST[status]','$_POST[keterangan]','$_POST[waktu_absen]')");
+
+    if($simpan){
+        echo "<script>
+                alert('Simpan data sukses!');
+                document.location='absensi.php';
+            </script>";
+    } else {
+        echo "<script>
+                alert('Simpan data Gagal!');
+                document.location='absensi.php';
+            </script>";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -115,38 +132,97 @@ if($_SESSION['status'] != 'login'){
       <div class="container-fluid page-body-wrapper">        
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
-  <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-    <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
-    <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
-      <i class="mdi mdi-menu"></i>
-    </button>
-    <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-      <li class="nav-item  nav-profile dropdown border-0">
-        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-          <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-          <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
-        </a>
-        <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-          <a class="dropdown-item" href="logout.php">
-            <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-        </div>
-      </li>
-    </ul>
-    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-      <span class="mdi mdi-menu"></span>
-    </button>
-  </div>
-</nav>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+                <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+                <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
+                <i class="mdi mdi-menu"></i>
+                </button>
+                <ul class="navbar-nav navbar-nav-right ml-lg-auto">
+                <li class="nav-item  nav-profile dropdown border-0">
+                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+                    <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
+                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+                    </a>
+                    <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="logout.php">
+                        <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                    </div>
+                </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+            </nav>
+
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper pb-0">
-            <div class="page-header flex-wrap">
-              <h3 class="mb-0">Hi, Selamat Datang! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block"><?= $_SESSION['nama_admin'] ?></span>
-              </h3>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Tambah Absensi</h3>
+            </div>
+            <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <form class="forms-sample" method="POST">
+                    <div class="form-group">
+                        <label for="exampleSelectGender">Siswa</label>
+                        <select class="form-select" id="id_siswa" name="id_siswa" required>
+                          <option disabled selected>Pilih</option>
+                          <?php
+                                $no = 1;
+                                $tampil = mysqli_query($koneksi, "SELECT * FROM siswa");
+                                while($data = mysqli_fetch_array($tampil)):
+                          ?>
+                          <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
+                          <?php
+                            endwhile; 
+                          ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleSelectGender">Kelas</label>
+                        <select class="form-select" id="id_kelas" name="id_kelas" required>
+                          <option disabled selected>Pilih</option>
+                          <?php
+                                $no = 1;
+                                $tampil = mysqli_query($koneksi, "SELECT * FROM kelas");
+                                while($data = mysqli_fetch_array($tampil)):
+                            ?>
+                          <option value="<?= $data['id'] ?>"><?= $data['kelas'] ?></option>
+                          <?php
+                            endwhile; 
+                          ?>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleSelectGender">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                          <option disabled selected>Pilih</option>
+                          <option value="hadir">Hadir</option>
+                          <option value="izin">Izin</option>
+                          <option value="sakit">Sakit</option>
+                          <option value="alpa">Alpa</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleTextarea1">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="kelas">Waktu Absen</label>
+                        <input type="time" class="form-control" id="waktu_absen" placeholder="Waktu Absen" name="waktu_absen" required>
+                      </div>
+                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
+          <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
   <div class="d-sm-flex justify-content-center justify-content-sm-between">
     <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
