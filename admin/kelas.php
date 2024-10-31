@@ -84,8 +84,8 @@ if(isset($_GET['hal']) == "hapus"){
       </a>
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">          
-          <!-- <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li> -->
+          <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
+          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
     </li>        

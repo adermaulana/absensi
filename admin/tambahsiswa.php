@@ -13,34 +13,23 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_POST['simpan'])){
 
-if(isset($_GET['hal'])){
-    if($_GET['hal'] == "edit"){
-        $tampil = mysqli_query($koneksi, "SELECT * FROM kelas WHERE id = '$_GET[id]'");
-        $data = mysqli_fetch_array($tampil);
-        if($data){
-            $id = $data['id'];
-            $kelas = $data['kelas'];
-        }
-    }
-}
+    $password = md5($_POST['password']);
 
-if (isset($_POST['simpan'])) {
-    // Update data pelanggan
-    $simpan = mysqli_query($koneksi, "UPDATE kelas SET
-                                        kelas = '$_POST[kelas]'
-                                      WHERE id = '$_GET[id]'");
+    $simpan = mysqli_query($koneksi, "INSERT INTO siswa (nim, nama, username, password
+) VALUES ('$_POST[nim]','$_POST[nama]','$_POST[username]','$password')");
 
-    if ($simpan) {
+    if($simpan){
         echo "<script>
-                alert('Edit data sukses!');
-                document.location='kelas.php';
-              </script>";
+                alert('Simpan data sukses!');
+                document.location='siswa.php';
+            </script>";
     } else {
         echo "<script>
-                alert('Edit data Gagal!');
-                document.location='kelas.php';
-              </script>";
+                alert('Simpan data Gagal!');
+                document.location='siswa.php';
+            </script>";
     }
 }
 
@@ -173,7 +162,7 @@ if (isset($_POST['simpan'])) {
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Kelas</h3>
+              <h3 class="page-title">Tambah Siswa</h3>
             </div>
             <div class="row">
               <div class="col-md-6 grid-margin stretch-card">
@@ -181,8 +170,20 @@ if (isset($_POST['simpan'])) {
                   <div class="card-body">
                     <form class="forms-sample" method="POST">
                       <div class="form-group">
-                        <label for="kelas">Kelas</label>
-                        <input type="text" class="form-control" id="kelas" placeholder="Kelas" value="<?= $kelas ?>" name="kelas">
+                        <label for="nama">Nama</label>
+                        <input type="text" class="form-control" id="nama" placeholder="Nama" name="nama">
+                      </div>
+                      <div class="form-group">
+                        <label for="nim">Nim</label>
+                        <input type="number" class="form-control" id="nim" placeholder="Nim" name="nim">
+                      </div>
+                      <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="kelas" placeholder="Username" name="username">
+                      </div>
+                      <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                       </div>
                       <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
                     </form>
@@ -232,4 +233,4 @@ if (isset($_POST['simpan'])) {
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
   </body>
-</html>
+</html> 

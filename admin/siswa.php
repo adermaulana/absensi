@@ -13,35 +13,16 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
 
-if(isset($_GET['hal'])){
-    if($_GET['hal'] == "edit"){
-        $tampil = mysqli_query($koneksi, "SELECT * FROM kelas WHERE id = '$_GET[id]'");
-        $data = mysqli_fetch_array($tampil);
-        if($data){
-            $id = $data['id'];
-            $kelas = $data['kelas'];
-        }
-    }
-}
+  $hapus = mysqli_query($koneksi, "DELETE FROM siswa WHERE id = '$_GET[id]'");
 
-if (isset($_POST['simpan'])) {
-    // Update data pelanggan
-    $simpan = mysqli_query($koneksi, "UPDATE kelas SET
-                                        kelas = '$_POST[kelas]'
-                                      WHERE id = '$_GET[id]'");
-
-    if ($simpan) {
-        echo "<script>
-                alert('Edit data sukses!');
-                document.location='kelas.php';
-              </script>";
-    } else {
-        echo "<script>
-                alert('Edit data Gagal!');
-                document.location='kelas.php';
-              </script>";
-    }
+  if($hapus){
+      echo "<script>
+      alert('Hapus data sukses!');
+      document.location='siswa.php';
+      </script>";
+  }
 }
 
 ?>
@@ -168,24 +149,52 @@ if (isset($_POST['simpan'])) {
                 </button>
             </div>
             </nav>
-
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Kelas</h3>
+              <h3 class="page-title">Kelas</h3>
             </div>
             <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
+              <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                        <label for="kelas">Kelas</label>
-                        <input type="text" class="form-control" id="kelas" placeholder="Kelas" value="<?= $kelas ?>" name="kelas">
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
-                    </form>
+                    <h4 class="card-title">Data Siswa</h4>
+                    <a class="btn btn-success" href="tambahsiswa.php">Tambah Siswa</a>
+                    </p>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Nim</th>
+                            <th>Nama</th>
+                            <th>Username</th>
+                            <th>Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $no = 1;
+                            $tampil = mysqli_query($koneksi, "SELECT * FROM siswa");
+                            while($data = mysqli_fetch_array($tampil)):
+                        ?>
+                          <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= $data['nim'] ?></td>
+                            <td><?= $data['nama'] ?></td>
+                            <td><?= $data['username'] ?></td>
+                            <td>
+                                <a class="btn btn-warning" href="editsiswa.php?hal=edit&id=<?= $data['id']?>">Edit</a>
+                                <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="siswa.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
+                            </td>
+                          </tr>
+                          <?php
+                            endwhile; 
+                        ?>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
