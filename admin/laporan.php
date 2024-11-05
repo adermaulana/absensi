@@ -21,7 +21,7 @@ if($_SESSION['status'] != 'login'){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
+    <title>Breeze Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -139,80 +139,143 @@ if($_SESSION['status'] != 'login'){
             </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">Absensi</h3>
-            </div>
-            <div class="row">
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Data Absensi</h4>
-                    <a class="btn btn-success" href="tambahabsensi.php">Tambah Data</a>
-                    </p>
-                    <div class="table-responsive">
-                    <table class="table">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">Laporan</h3>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Data Laporan Absensi</h4>
+                  
+                  <!-- Form Filter -->
+                  <form method="GET" action="" class="mb-4">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>Tanggal Awal</label>
+                          <input type="date" name="tanggal_awal" class="form-control" value="<?= isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '' ?>">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>Tanggal Akhir</label>
+                          <input type="date" name="tanggal_akhir" class="form-control" value="<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>&nbsp;</label><br>
+                          <button type="submit" class="btn btn-primary">
+                            <i class="mdi mdi-filter"></i> Filter
+                          </button>
+                          <?php if(isset($_GET['tanggal_awal'])): ?>
+                            <a href="?" class="btn btn-outline-secondary">
+                              <i class="mdi mdi-refresh"></i> Reset
+                            </a>
+                          <?php endif; ?>
+                          
+                          <!-- Tombol Export Excel -->
+                          <?php if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])): ?>
+                            <!-- <a href="export_excel.php?tanggal_awal=<?= $_GET['tanggal_awal'] ?>&tanggal_akhir=<?= $_GET['tanggal_akhir'] ?>" 
+                               class="btn btn-success">
+                              <i class="mdi mdi-file-excel"></i> Export Excel
+                            </a> -->
+                          <?php else: ?>
+                            <!-- <a href="export_excel.php" class="btn btn-success">
+                              <i class="mdi mdi-file-excel"></i> Export Excel
+                            </a> -->
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover">
                       <thead>
-                          <tr>
-                              <th>No</th>
-                              <th>Tanggal</th>
-                              <th>Nama Siswa</th>
-                              <th>Status</th>
-                              <th>Keterangan</th>
-                              <th>Nama Guru</th>
-                              <th>Waktu Input</th>
-                          </tr>
+                        <tr>
+                          <th>No</th>
+                          <th>Tanggal</th>
+                          <th>Nama Siswa</th>
+                          <th>Status</th>
+                          <th>Keterangan</th>
+                          <th>Nama Guru</th>
+                          <th>Waktu Input</th>
+                        </tr>
                       </thead>
                       <tbody>
                       <?php
-                          $no = 1;
-                          $tampil = mysqli_query($koneksi, "SELECT a.*, 
-                                                          s.nama_lengkap as nama_siswa,
-                                                          g.nama_lengkap
-                                                          FROM absensi a
-                                                          JOIN siswa s ON a.siswa_id = s.id 
-                                                          JOIN guru g ON a.guru_id = g.id
-                                                          ORDER BY a.tanggal DESC, a.created_at DESC");
+                        $no = 1;
+                        $query = "SELECT a.*, 
+                                s.nama_lengkap as nama_siswa,
+                                g.nama_lengkap
+                                FROM absensi a
+                                JOIN siswa s ON a.siswa_id = s.id 
+                                JOIN guru g ON a.guru_id = g.id";
+
+                        // Tambahkan filter tanggal jika ada
+                        if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])) {
+                          $tanggal_awal = $_GET['tanggal_awal'];
+                          $tanggal_akhir = $_GET['tanggal_akhir'];
+                          
+                          if(!empty($tanggal_awal) && !empty($tanggal_akhir)) {
+                            $query .= " WHERE a.tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
+                          }
+                        }
+
+                        $query .= " ORDER BY a.tanggal DESC, a.created_at DESC";
+                        $tampil = mysqli_query($koneksi, $query);
+                        
+                        if(mysqli_num_rows($tampil) > 0) {
                           while($data = mysqli_fetch_array($tampil)):
                       ?>
-                          <tr>
-                              <td><?= $no++ ?></td>
-                              <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
-                              <td><?= $data['nama_siswa'] ?></td>
-                              <td>
-                              <?php if($data['status'] == 'Hadir'): ?>
+                        <tr>
+                          <td><?= $no++ ?></td>
+                          <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
+                          <td><?= $data['nama_siswa'] ?></td>
+                          <td>
+                            <?php if($data['status'] == 'Hadir'): ?>
                               <span class="badge badge-success"><?= $data['status'] ?></span>
-                              <?php elseif($data['status'] == 'Sakit'): ?>
-                                <span class="badge badge-warning"><?= $data['status'] ?></span>
-                              <?php elseif($data['status'] == 'Izin'): ?>
-                                <span class="badge badge-info"><?= $data['status'] ?></span>
-                              <?php else: ?>
-                                <span class="badge badge-danger"><?= $data['status'] ?></span>
-                              <?php endif; ?>
-                              </td>
-                              <td><?= $data['keterangan'] ?></td>
-                              <td><?= $data['nama_lengkap'] ?></td>
-                              <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
-                          </tr>
-                      <?php endwhile; ?>
+                            <?php elseif($data['status'] == 'Sakit'): ?>
+                              <span class="badge badge-warning"><?= $data['status'] ?></span>
+                            <?php elseif($data['status'] == 'Izin'): ?>
+                              <span class="badge badge-info"><?= $data['status'] ?></span>
+                            <?php else: ?>
+                              <span class="badge badge-danger"><?= $data['status'] ?></span>
+                            <?php endif; ?>
+                          </td>
+                          <td><?= $data['keterangan'] ?></td>
+                          <td><?= $data['nama_lengkap'] ?></td>
+                          <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
+                        </tr>
+                      <?php 
+                          endwhile; 
+                        } else {
+                      ?>
+                        <tr>
+                          <td colspan="7" class="text-center">Tidak ada data yang ditemukan</td>
+                        </tr>
+                      <?php } ?>
                       </tbody>
                     </table>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
-  <div class="d-sm-flex justify-content-center justify-content-sm-between">
-    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
-    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
-  </div>
-</footer>
-          <!-- partial -->
         </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
         <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->
