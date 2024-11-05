@@ -153,7 +153,7 @@ if(isset($_POST['simpan'])){
                     </a>
                     <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
                     <a class="dropdown-item" href="logout.php">
-                        <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                        Signout </a>
                     </div>
                 </li>
                 </ul>
