@@ -114,14 +114,62 @@ if($_SESSION['status'] != 'login'){
 </nav>
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper pb-0">
-            <div class="page-header flex-wrap">
-              <h3 class="mb-0">Hi, Selamat Datang! <span class="ps-0 h6 ps-sm-2 text-muted d-inline-block"><?= $_SESSION['nama_siswa'] ?></span>
-              </h3>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Absensi</h3>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Data Absensi</h4>
+                    <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                          <tr>
+                              <th>No</th>
+                              <th>Tanggal</th>
+                              <th>Nama Siswa</th>
+                              <th>Status</th>
+                              <th>Keterangan</th>
+                              <th>Nama Guru</th>
+                              <th>Waktu Input</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT a.*, 
+                                                          s.nama_lengkap as nama_siswa,
+                                                          g.nama_lengkap
+                                                          FROM absensi a
+                                                          JOIN siswa s ON a.siswa_id = s.id 
+                                                          JOIN guru g ON a.guru_id = g.id
+                                                          WHERE a.siswa_id = '$id_siswa'
+                                                          ORDER BY a.tanggal DESC, a.created_at DESC
+                                                          ");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
+                          <tr>
+                              <td><?= $no++ ?></td>
+                              <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
+                              <td><?= $data['nama_siswa'] ?></td>
+                              <td><?= $data['status'] ?></td>
+                              <td><?= $data['keterangan'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
+                          </tr>
+                      <?php endwhile; ?>
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
+          <!-- partial:../../partials/_footer.html -->
           <footer class="footer">
   <div class="d-sm-flex justify-content-center justify-content-sm-between">
     <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>

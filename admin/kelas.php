@@ -15,12 +15,12 @@ if($_SESSION['status'] != 'login'){
 
 if(isset($_GET['hal']) == "hapus"){
 
-  $hapus = mysqli_query($koneksi, "DELETE FROM kelas WHERE id = '$_GET[id]'");
+  $hapus = mysqli_query($koneksi, "DELETE FROM siswa WHERE id = '$_GET[id]'");
 
   if($hapus){
       echo "<script>
       alert('Hapus data sukses!');
-      document.location='kelas.php';
+      document.location='siswa.php';
       </script>";
   }
 }
@@ -33,7 +33,7 @@ if(isset($_GET['hal']) == "hapus"){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -163,33 +163,38 @@ if(isset($_GET['hal']) == "hapus"){
                     <a class="btn btn-success" href="tambahkelas.php">Tambah Kelas</a>
                     </p>
                     <div class="table-responsive">
-                      <table class="table">
-                        <thead>
+                    <table class="table">
+                      <thead>
                           <tr>
-                            <th>No</th>
-                            <th>Kelas</th>
-                            <th>Aksi</th>
+                              <th>No</th>
+                              <th>Nama Kelas</th>
+                              <th>Wali Kelas</th>
+                              <th>Tahun Ajaran</th>
+                              <th>Aksi</th>
                           </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                            $no = 1;
-                            $tampil = mysqli_query($koneksi, "SELECT * FROM kelas");
-                            while($data = mysqli_fetch_array($tampil)):
-                        ?>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT kelas.*, guru.nama_lengkap 
+                                                          FROM kelas 
+                                                          LEFT JOIN guru ON kelas.wali_kelas_id = guru.id");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
                           <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $data['kelas'] ?></td>
-                            <td>
-                                <a class="btn btn-warning" href="editkelas.php?hal=edit&id=<?= $data['id']?>">Edit</a>
-                                <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="kelas.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
-                            </td>
+                              <td><?= $no++ ?></td>
+                              <td><?= $data['nama_kelas'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= $data['tahun_ajaran'] ?></td>
+                              <td>
+                                  <a class="btn btn-warning" href="editkelas.php?id=<?= $data['id']?>">Edit</a>
+                                  <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" 
+                                    href="kelas.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
+                              </td>
                           </tr>
-                          <?php
-                            endwhile; 
-                        ?>
-                        </tbody>
-                      </table>
+                      <?php endwhile; ?>
+                      </tbody>
+                  </table>
                     </div>
                   </div>
                 </div>

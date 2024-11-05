@@ -151,39 +151,42 @@ if($_SESSION['status'] != 'login'){
                     <a class="btn btn-success" href="tambahabsensi.php">Tambah Data</a>
                     </p>
                     <div class="table-responsive">
-                      <table class="table">
-                        <thead>
+                    <table class="table">
+                      <thead>
                           <tr>
-                            <th>No</th>
-                            <th>Nama Siswa</th>
-                            <th>Kelas</th>
-                            <th>Status</th>
-                            <th>Keterangan</th>
-                            <th>Waktu Absensi</th>
+                              <th>No</th>
+                              <th>Tanggal</th>
+                              <th>Nama Siswa</th>
+                              <th>Status</th>
+                              <th>Keterangan</th>
+                              <th>Nama Guru</th>
+                              <th>Waktu Input</th>
                           </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                            $no = 1;
-                            $tampil = mysqli_query($koneksi, "SELECT a.*, s.nama as nama_siswa, k.kelas
-                                                            FROM absensi a
-                                                            JOIN siswa s ON a.id_siswa = s.id
-                                                            JOIN kelas k  ON a.id_kelas = k.id");
-                            while($data = mysqli_fetch_array($tampil)):
-                        ?>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT a.*, 
+                                                          s.nama_lengkap as nama_siswa,
+                                                          g.nama_lengkap
+                                                          FROM absensi a
+                                                          JOIN siswa s ON a.siswa_id = s.id 
+                                                          JOIN guru g ON a.guru_id = g.id
+                                                          ORDER BY a.tanggal DESC, a.created_at DESC");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
                           <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $data['nama_siswa'] ?></td>
-                            <td><?= $data['kelas'] ?></td>
-                            <td><?= $data['status'] ?></td>
-                            <td><?= $data['keterangan'] ?></td>
-                            <td><?= $data['waktu_absen'] ?></td>
+                              <td><?= $no++ ?></td>
+                              <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
+                              <td><?= $data['nama_siswa'] ?></td>
+                              <td><?= $data['status'] ?></td>
+                              <td><?= $data['keterangan'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
                           </tr>
-                          <?php
-                            endwhile; 
-                        ?>
-                        </tbody>
-                      </table>
+                      <?php endwhile; ?>
+                      </tbody>
+                    </table>
                     </div>
                   </div>
                 </div>

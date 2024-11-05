@@ -13,39 +13,56 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_GET['hal'])){
-    if($_GET['hal'] == "edit"){
-        $tampil = mysqli_query($koneksi, "SELECT * FROM siswa WHERE id = '$_GET[id]'");
-        $data = mysqli_fetch_array($tampil);
-        if($data){
-            $id = $data['id'];
-            $nim = $data['nim'];
-            $nama = $data['nama'];
-            $username = $data['username'];
-        }
-    }
+$id = $_GET['id'];
+$query = mysqli_query($koneksi, "SELECT * FROM siswa WHERE id='$id'");
+$data = mysqli_fetch_array($query);
+
+if(isset($_POST['update'])){
+  $siswa_id = $_POST['siswa_id'];
+  
+  // Base query without password
+  $query = "UPDATE siswa SET 
+      nis = '".mysqli_real_escape_string($koneksi, $_POST['nis'])."',
+      nama_lengkap = '".mysqli_real_escape_string($koneksi, $_POST['nama_lengkap'])."',
+      email = '".mysqli_real_escape_string($koneksi, $_POST['email'])."',
+      kelas_id = '".mysqli_real_escape_string($koneksi, $_POST['kelas_id'])."',
+      jenis_kelamin = '".mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin'])."',
+      alamat = '".mysqli_real_escape_string($koneksi, $_POST['alamat'])."',
+      nama_ortu = '".mysqli_real_escape_string($koneksi, $_POST['nama_ortu'])."',
+      no_telp_ortu = '".mysqli_real_escape_string($koneksi, $_POST['no_telp_ortu'])."'
+      WHERE id = '$siswa_id'";
+
+  // If password is filled, update password
+  if(!empty($_POST['password'])){
+      $password = md5($_POST['password']);
+      $query = "UPDATE siswa SET 
+          nis = '".mysqli_real_escape_string($koneksi, $_POST['nis'])."',
+          nama_lengkap = '".mysqli_real_escape_string($koneksi, $_POST['nama_lengkap'])."',
+          password = '$password',
+          email = '".mysqli_real_escape_string($koneksi, $_POST['email'])."',
+          kelas_id = '".mysqli_real_escape_string($koneksi, $_POST['kelas_id'])."',
+          jenis_kelamin = '".mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin'])."',
+          alamat = '".mysqli_real_escape_string($koneksi, $_POST['alamat'])."',
+          nama_ortu = '".mysqli_real_escape_string($koneksi, $_POST['nama_ortu'])."',
+          no_telp_ortu = '".mysqli_real_escape_string($koneksi, $_POST['no_telp_ortu'])."'
+          WHERE id = '$siswa_id'";
+  }
+
+  $update = mysqli_query($koneksi, $query);
+
+  if($update){
+      echo "<script>
+              alert('Update data sukses!');
+              document.location='siswa.php';
+           </script>";
+  } else {
+      echo "<script>
+              alert('Update data gagal!');
+              document.location='siswa.php';
+           </script>";
+  }
 }
 
-if (isset($_POST['simpan'])) {
-    // Update data pelanggan
-    $simpan = mysqli_query($koneksi, "UPDATE siswa SET
-                                        nim = '$_POST[nim]',
-                                        nama = '$_POST[nama]',
-                                        username = '$_POST[username]'
-                                      WHERE id = '$_GET[id]'");
-
-    if ($simpan) {
-        echo "<script>
-                alert('Edit data sukses!');
-                document.location='siswa.php';
-              </script>";
-    } else {
-        echo "<script>
-                alert('Edit data Gagal!');
-                document.location='siswa.php';
-              </script>";
-    }
-}
 
 
 ?>
@@ -183,21 +200,61 @@ if (isset($_POST['simpan'])) {
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" class="form-control" id="nama" value="<?= $nama ?>" placeholder="Nama" name="nama">
-                      </div>
-                      <div class="form-group">
-                        <label for="nim">Nim</label>
-                        <input type="number" class="form-control" id="nim" value="<?= $nim ?>" placeholder="Nim" name="nim">
-                      </div>
-                      <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" id="kelas" value="<?= $username ?>" placeholder="Username" name="username">
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
-                    </form>
+                  <form class="forms-sample" method="POST">
+                    <div class="form-group">
+                      <label for="nama_lengkap">Nama Lengkap</label>
+                      <input type="text" class="form-control" id="nama_lengkap" placeholder="Nama Lengkap" name="nama_lengkap" value="<?= $data['nama_lengkap'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="nis">NIS</label>
+                      <input type="text" class="form-control" id="nis" placeholder="Nomor Induk Siswa" name="nis" value="<?= $data['nis'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="<?= $data['email'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Kosongkan jika tidak ingin mengubah password" name="password">
+                      <small class="text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="kelas_id">Kelas</label>
+                      <select class="form-control" id="kelas_id" name="kelas_id">
+                        <option selected disabled>Pilih Kelas</option>
+                        <?php
+                        $query_kelas = mysqli_query($koneksi, "SELECT * FROM kelas");
+                        while($kelas = mysqli_fetch_array($query_kelas)) {
+                          $selected = ($kelas['id'] == $data['kelas_id']) ? 'selected' : '';
+                          echo "<option value='$kelas[id]' $selected>$kelas[nama_kelas]</option>";
+                        }
+                        ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="jenis_kelamin">Jenis Kelamin</label>
+                      <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L" <?= ($data['jenis_kelamin'] == 'L') ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= ($data['jenis_kelamin'] == 'P') ? 'selected' : '' ?>>Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="alamat">Alamat</label>
+                      <textarea class="form-control" id="alamat" rows="4" placeholder="Alamat Lengkap" name="alamat"><?= $data['alamat'] ?></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="nama_ortu">Nama Orang Tua</label>
+                      <input type="text" class="form-control" id="nama_ortu" placeholder="Nama Orang Tua" name="nama_ortu" value="<?= $data['nama_ortu'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="no_telp_ortu">No. Telepon Orang Tua</label>
+                      <input type="text" class="form-control" id="no_telp_ortu" placeholder="Nomor Telepon Orang Tua" name="no_telp_ortu" value="<?= $data['no_telp_ortu'] ?>">
+                    </div>
+                    <input type="hidden" name="siswa_id" value="<?= $data['id'] ?>">
+                    <button type="submit" name="update" class="btn btn-primary me-2">Update</button>
+                    <a href="siswa.php" class="btn btn-light">Cancel</a>
+                  </form>
                   </div>
                 </div>
               </div>

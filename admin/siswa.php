@@ -33,7 +33,7 @@ if(isset($_GET['hal']) == "hapus"){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -163,37 +163,50 @@ if(isset($_GET['hal']) == "hapus"){
                     <a class="btn btn-success" href="tambahsiswa.php">Tambah Siswa</a>
                     </p>
                     <div class="table-responsive">
-                      <table class="table">
-                        <thead>
+                    <table class="table">
+                      <thead>
                           <tr>
-                            <th>No</th>
-                            <th>Nim</th>
-                            <th>Nama</th>
-                            <th>Username</th>
-                            <th>Aksi</th>
+                              <th>No</th>
+                              <th>NIS</th>
+                              <th>Nama Lengkap</th>
+                              <th>Email</th>
+                              <th>Kelas</th>
+                              <th>Jenis Kelamin</th>
+                              <th>Alamat</th>
+                              <th>Nama Orang Tua</th>
+                              <th>No. Telp Orang Tua</th>
+                              <th>Tanggal Daftar</th>
+                              <th>Aksi</th>
                           </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                            $no = 1;
-                            $tampil = mysqli_query($koneksi, "SELECT * FROM siswa");
-                            while($data = mysqli_fetch_array($tampil)):
-                        ?>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT siswa.*, kelas.nama_kelas 
+                                                          FROM siswa 
+                                                          LEFT JOIN kelas ON siswa.kelas_id = kelas.id");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
                           <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $data['nim'] ?></td>
-                            <td><?= $data['nama'] ?></td>
-                            <td><?= $data['username'] ?></td>
-                            <td>
-                                <a class="btn btn-warning" href="editsiswa.php?hal=edit&id=<?= $data['id']?>">Edit</a>
-                                <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="siswa.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
-                            </td>
+                              <td><?= $no++ ?></td>
+                              <td><?= $data['nis'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= $data['email'] ?></td>
+                              <td><?= $data['nama_kelas'] ?></td>
+                              <td><?= $data['jenis_kelamin'] ?></td>
+                              <td><?= $data['alamat'] ?></td>
+                              <td><?= $data['nama_ortu'] ?></td>
+                              <td><?= $data['no_telp_ortu'] ?></td>
+                              <td><?= date('d-m-Y', strtotime($data['created_at'])) ?></td>
+                              <td>
+                                  <a class="btn btn-warning" href="editsiswa.php?id=<?= $data['id']?>">Edit</a>
+                                  <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" 
+                                    href="siswa.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
+                              </td>
                           </tr>
-                          <?php
-                            endwhile; 
-                        ?>
-                        </tbody>
-                      </table>
+                      <?php endwhile; ?>
+                      </tbody>
+                  </table>
                     </div>
                   </div>
                 </div>

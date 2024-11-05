@@ -14,23 +14,37 @@ if($_SESSION['status'] != 'login'){
 }
 
 if(isset($_POST['simpan'])){
+  // Hash password using MD5
+  $password = md5($_POST['password']);
+  
+  // Get form data and escape strings to prevent SQL injection
+  $nis = mysqli_real_escape_string($koneksi, $_POST['nis']);
+  $nama_lengkap = mysqli_real_escape_string($koneksi, $_POST['nama_lengkap']);
+  $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+  $kelas_id = mysqli_real_escape_string($koneksi, $_POST['kelas_id']);
+  $jenis_kelamin = mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin']);
+  $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
+  $nama_ortu = mysqli_real_escape_string($koneksi, $_POST['nama_ortu']);
+  $no_telp_ortu = mysqli_real_escape_string($koneksi, $_POST['no_telp_ortu']);
 
-    $password = md5($_POST['password']);
+  // Create SQL query
+  $simpan = mysqli_query($koneksi, "INSERT INTO siswa 
+      (password, nis, nama_lengkap, email, kelas_id, jenis_kelamin, alamat, nama_ortu, no_telp_ortu) 
+      VALUES 
+      ('$password', '$nis', '$nama_lengkap', '$email', '$kelas_id', '$jenis_kelamin', '$alamat', '$nama_ortu', '$no_telp_ortu')"
+  );
 
-    $simpan = mysqli_query($koneksi, "INSERT INTO siswa (nim, nama, username, password
-) VALUES ('$_POST[nim]','$_POST[nama]','$_POST[username]','$password')");
-
-    if($simpan){
-        echo "<script>
-                alert('Simpan data sukses!');
-                document.location='siswa.php';
-            </script>";
-    } else {
-        echo "<script>
-                alert('Simpan data Gagal!');
-                document.location='siswa.php';
-            </script>";
-    }
+  if($simpan){
+      echo "<script>
+              alert('Data siswa berhasil disimpan!');
+              document.location='siswa.php';
+          </script>";
+  } else {
+      echo "<script>
+              alert('Gagal menyimpan data siswa!');
+              document.location='siswa.php';
+           </script>";
+  }
 }
 
 ?>
@@ -41,7 +55,7 @@ if(isset($_POST['simpan'])){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -168,25 +182,58 @@ if(isset($_POST['simpan'])){
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" class="form-control" id="nama" placeholder="Nama" name="nama">
-                      </div>
-                      <div class="form-group">
-                        <label for="nim">Nim</label>
-                        <input type="number" class="form-control" id="nim" placeholder="Nim" name="nim">
-                      </div>
-                      <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" id="kelas" placeholder="Username" name="username">
-                      </div>
-                      <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
-                    </form>
+                  <form class="forms-sample" method="POST">
+                    <div class="form-group">
+                      <label for="nama_lengkap">Nama Lengkap</label>
+                      <input type="text" class="form-control" id="nama_lengkap" placeholder="Nama Lengkap" name="nama_lengkap">
+                    </div>
+                    <div class="form-group">
+                      <label for="nis">NIS</label>
+                      <input type="text" class="form-control" id="nis" placeholder="Nomor Induk Siswa" name="nis">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Email" name="email">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                    </div>
+                    <div class="form-group">
+                      <label for="kelas_id">Kelas</label>
+                      <select class="form-control" id="kelas_id" name="kelas_id">
+                        <option value="">Pilih Kelas</option>
+                        <?php
+                        $query_kelas = mysqli_query($koneksi, "SELECT * FROM kelas");
+                        while($kelas = mysqli_fetch_array($query_kelas)) {
+                          echo "<option value='$kelas[id]' $selected>$kelas[nama_kelas]</option>";
+                        }
+                        ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="jenis_kelamin">Jenis Kelamin</label>
+                      <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="alamat">Alamat</label>
+                      <textarea class="form-control" id="alamat" rows="4" placeholder="Alamat Lengkap" name="alamat"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="nama_ortu">Nama Orang Tua</label>
+                      <input type="text" class="form-control" id="nama_ortu" placeholder="Nama Orang Tua" name="nama_ortu">
+                    </div>
+                    <div class="form-group">
+                      <label for="no_telp_ortu">No. Telepon Orang Tua</label>
+                      <input type="text" class="form-control" id="no_telp_ortu" placeholder="Nomor Telepon Orang Tua" name="no_telp_ortu">
+                    </div>
+                    <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
+                    <button type="button" class="btn btn-light">Cancel</button>
+                  </form>
                   </div>
                 </div>
               </div>

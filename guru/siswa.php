@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_guru = $_SESSION['id_guru'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -13,38 +15,6 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-$id = $_GET['id'];
-$query = mysqli_query($koneksi, "SELECT * FROM kelas WHERE id='$id'");
-$data = mysqli_fetch_array($query);
-
-if(isset($_POST['update'])){
-  $kelas_id = $_POST['kelas_id'];
-  
-  // Prepare the query
-  $query = "UPDATE kelas SET 
-      nama_kelas = '".mysqli_real_escape_string($koneksi, $_POST['nama_kelas'])."',
-      wali_kelas_id = '".mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id'])."',
-      tahun_ajaran = '".mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran'])."'
-      WHERE id = '$kelas_id'";
-
-  $update = mysqli_query($koneksi, $query);
-
-  if($update){
-      echo "<script>
-              alert('Update data kelas sukses!');
-              document.location='kelas.php';
-           </script>";
-  } else {
-      echo "<script>
-              alert('Update data kelas gagal!');
-              document.location='kelas.php';
-           </script>";
-  }
-}
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +23,7 @@ if(isset($_POST['update'])){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Guru</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -74,7 +44,7 @@ if(isset($_POST['update'])){
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
-    <a class="sidebar-brand brand-logo" href="index.html"><img src="../assets/images/logo.svg" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo" href="index.php"><img src="../assets/images/logo.svg" alt="logo" /></a>
     <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
   </div>
   <ul class="nav">
@@ -86,7 +56,7 @@ if(isset($_POST['update'])){
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column pe-3">
-          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
+          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_guru'] ?></span>
         </div>
       </a>
     </li>
@@ -105,23 +75,9 @@ if(isset($_POST['update'])){
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">          
           <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
     </li>        
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-        <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Kelas</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="icons">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>                            
-          <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>                            
-        </ul>
-      </div>
-    </li>
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
         <i class="mdi mdi-format-list-bulleted menu-icon"></i>
@@ -147,66 +103,85 @@ if(isset($_POST['update'])){
       <div class="container-fluid page-body-wrapper">        
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
-            <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-                <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
-                <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
-                <i class="mdi mdi-menu"></i>
-                </button>
-                <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-                <li class="nav-item  nav-profile dropdown border-0">
-                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-                    <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
-                    </a>
-                    <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="logout.php">
-                        <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
-                    </div>
-                </li>
-                </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-                <span class="mdi mdi-menu"></span>
-                </button>
-            </div>
-            </nav>
-
+  <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+    <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+    <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
+      <i class="mdi mdi-menu"></i>
+    </button>
+    <ul class="navbar-nav navbar-nav-right ml-lg-auto">
+      <li class="nav-item  nav-profile dropdown border-0">
+        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+          <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
+          <span class="profile-name"><?= $_SESSION['nama_guru'] ?></span>
+        </a>
+        <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+          <a class="dropdown-item" href="logout.php">
+             Signout</a>
+        </div>
+      </li>
+    </ul>
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+      <span class="mdi mdi-menu"></span>
+    </button>
+  </div>
+</nav>
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Siswa</h3>
+              <h3 class="page-title">Siswa</h3>
             </div>
             <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
+              <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                  <form class="forms-sample" method="POST">
-                    <div class="form-group">
-                        <label for="nama_kelas">Nama Kelas</label>
-                        <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" value="<?= $data['nama_kelas'] ?>">
+                    <h4 class="card-title">Data Siswa</h4>
+                    <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                          <tr>
+                              <th>No</th>
+                              <th>NIS</th>
+                              <th>Nama Lengkap</th>
+                              <th>Email</th>
+                              <th>Kelas</th>
+                              <th>Jenis Kelamin</th>
+                              <th>Alamat</th>
+                              <th>Nama Orang Tua</th>
+                              <th>No. Telp Orang Tua</th>
+                              <th>Tanggal Daftar</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT siswa.*, kelas.nama_kelas 
+                                                            FROM siswa 
+                                                            LEFT JOIN kelas ON siswa.kelas_id = kelas.id
+                                                            WHERE siswa.kelas_id IN (
+                                                                SELECT id 
+                                                                FROM kelas 
+                                                                WHERE wali_kelas_id = $id_guru
+                                                            )
+                                                            ");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
+                          <tr>
+                              <td><?= $no++ ?></td>
+                              <td><?= $data['nis'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= $data['email'] ?></td>
+                              <td><?= $data['nama_kelas'] ?></td>
+                              <td><?= $data['jenis_kelamin'] ?></td>
+                              <td><?= $data['alamat'] ?></td>
+                              <td><?= $data['nama_ortu'] ?></td>
+                              <td><?= $data['no_telp_ortu'] ?></td>
+                              <td><?= date('d-m-Y', strtotime($data['created_at'])) ?></td>
+                          </tr>
+                      <?php endwhile; ?>
+                      </tbody>
+                  </table>
                     </div>
-                    <div class="form-group">
-                        <label for="wali_kelas_id">Wali Kelas</label>
-                        <select class="form-control" id="wali_kelas_id" name="wali_kelas_id">
-                            <option selected disabled>Pilih Wali Kelas</option>
-                            <?php
-                            $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
-                            while($guru = mysqli_fetch_array($query_guru)) {
-                                $selected = ($guru['id'] == $data['wali_kelas_id']) ? 'selected' : '';
-                                echo "<option value='$guru[id]' $selected>$guru[nama_lengkap]</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tahun_ajaran">Tahun Ajaran</label>
-                        <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" value="<?= $data['tahun_ajaran'] ?>">
-                    </div>
-                    <input type="hidden" name="kelas_id" value="<?= $data['id'] ?>">
-                    <button type="submit" name="update" class="btn btn-primary me-2">Update</button>
-                    <a href="kelas.php" class="btn btn-light">Cancel</a>
-                  </form>
-
                   </div>
                 </div>
               </div>
@@ -253,4 +228,4 @@ if(isset($_POST['update'])){
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
   </body>
-</html> 
+</html>

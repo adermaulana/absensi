@@ -9,40 +9,72 @@
         header("location:admin");
     }
 
-    if(isset($_POST['login'])){
-
-        $username = $_POST['username'];
-        $password = md5($_POST['password']);
-
-        $login = mysqli_query($koneksi, "SELECT * FROM admin WHERE username='$username' and password='$password'");
-        $cek = mysqli_num_rows($login);
-
-        $loginSiswa = mysqli_query($koneksi, "SELECT * FROM siswa WHERE username='$username' and password='$password'");
-        $cekSiswa = mysqli_num_rows($loginSiswa);
-
-        if($cek > 0) {
-            $admin_data = mysqli_fetch_assoc($login);
-            $_SESSION['id_admin'] = $admin_data['id'];
-            $_SESSION['nama_admin'] = $admin_data['nama'];
-            $_SESSION['username_admin'] = $username;
-            $_SESSION['status'] = "login";
-            header('location:admin');
-
-        } else if ($cekSiswa > 0) {
-          $admin_data = mysqli_fetch_assoc($loginSiswa);
-          $_SESSION['id_siswa'] = $admin_data['id'];
-          $_SESSION['nama_siswa'] = $admin_data['nama'];
-          $_SESSION['username_siswa'] = $username;
+    if(isset($_POST['login'])) {
+      // Sanitasi input
+      $username = mysqli_real_escape_string($koneksi, $_POST['username']);
+      $nis = isset($_POST['nis']) ? mysqli_real_escape_string($koneksi, $_POST['nis']) : '';
+      $nip = isset($_POST['nip']) ? mysqli_real_escape_string($koneksi, $_POST['nip']) : '';
+      $password = md5($_POST['password']); // Tetap menggunakan MD5 sesuai sistem yang ada
+  
+      // Query dengan prepared statement untuk admin
+      $stmt = mysqli_prepare($koneksi, "SELECT * FROM admin WHERE username=? AND password=?");
+      mysqli_stmt_bind_param($stmt, "ss", $username, $password);
+      mysqli_stmt_execute($stmt);
+      $login = mysqli_stmt_get_result($stmt);
+      $cek = mysqli_num_rows($login);
+  
+      // Query dengan prepared statement untuk mahasiswa
+      $stmtSiswa = mysqli_prepare($koneksi, "SELECT * FROM siswa WHERE nis=? AND password=?");
+      mysqli_stmt_bind_param($stmtSiswa, "ss", $nis, $password);
+      mysqli_stmt_execute($stmtSiswa);
+      $loginSiswa = mysqli_stmt_get_result($stmtSiswa);
+      $cekSiswa = mysqli_num_rows($loginSiswa);
+  
+      // Query dengan prepared statement untuk dosen
+      $stmtGuru = mysqli_prepare($koneksi, "SELECT * FROM guru WHERE nip=? AND password=?");
+      mysqli_stmt_bind_param($stmtGuru, "ss", $nip, $password);
+      mysqli_stmt_execute($stmtGuru);
+      $loginGuru = mysqli_stmt_get_result($stmtGuru);
+      $cekGuru = mysqli_num_rows($loginGuru);
+  
+      if($cek > 0) {
+          $admin_data = mysqli_fetch_assoc($login);
+          $_SESSION['id_admin'] = $admin_data['id'];
+          $_SESSION['nama_admin'] = $admin_data['nama'];
+          $_SESSION['username_admin'] = $username;
           $_SESSION['status'] = "login";
+          $_SESSION['role'] = "admin";
+          header('location:admin');
+          exit();
+  
+      } else if($cekSiswa > 0) {
+          $siswa_data = mysqli_fetch_assoc($loginSiswa);
+          $_SESSION['id_siswa'] = $siswa_data['id'];
+          $_SESSION['nama_siswa'] = $siswa_data['nama_lengkap'];
+          $_SESSION['nis'] = $siswa_data['nis'];
+          $_SESSION['status'] = "login";
+          $_SESSION['role'] = "siswa";
           header('location:siswa');
-
-      }  else {
-            echo "<script>
-            alert('Login Gagal, Periksa Username dan Password Anda!');
-            header('location:index.php');
-                 </script>";
-        }
-    }
+          exit();
+  
+      } else if($cekGuru > 0) {
+          $guru_data = mysqli_fetch_assoc($loginGuru);
+          $_SESSION['id_guru'] = $guru_data['id'];
+          $_SESSION['nama_guru'] = $guru_data['nama_lengkap'];
+          $_SESSION['nip'] = $guru_data['nip'];
+          $_SESSION['status'] = "login";
+          $_SESSION['role'] = "guru";
+          header('location:guru');
+          exit();
+  
+      } else {
+          echo "<script>
+              alert('Login Gagal');
+              window.location.href='index.php';
+          </script>";
+          exit();
+      }
+  }
 
 ?>
 
@@ -53,7 +85,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
@@ -74,18 +106,32 @@
           <div class="row flex-grow">
             <div class="col-lg-4 mx-auto">
               <div class="auth-form-light text-left p-5">
-                <div class="brand-logo">
-                  <img src="assets/images/logo.svg">
-                </div>
-                <h4>Hello! let's get started</h4>
-                <h6 class="font-weight-light">Sign in to continue.</h6>
+                <h4 class="text-center">Login</h4>
                 <form class="pt-3" method="POST">
+
                   <div class="form-group">
+                        <label class="form-label">Login Sebagai</label>
+                        <select class="form-control form-control-lg" id="roleSelect" onchange="showFields()">
+                            <option value="admin">Admin</option>
+                            <option value="siswa">Siswa</option>
+                            <option value="guru">Guru</option>
+                        </select>
+                  </div>
+
+                  <div id="usernameField" class="form-group">
                     <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Username">
+                  </div>
+                  <div id="nimField" class="form-group" style="display:none;">
+                    <input type="text" class="form-control form-control-lg" name="nis" id="nis" placeholder="NIS">
+                  </div>
+                  <div id="nipField" class="form-group" style="display:none;">
+                    <input type="text" class="form-control form-control-lg" name="nip" id="nip" placeholder="NIP">
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password">
                   </div>
+
+
                   <div class="mt-3 d-grid gap-2">
                     <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" name="login" type="submit">SIGN IN</button>
                   </div>
@@ -111,5 +157,35 @@
     <script src="assets/js/settings.js"></script>
     <script src="assets/js/todolist.js"></script>
     <!-- endinject -->
+
+    <script>
+        function showFields() {
+            const role = document.getElementById('roleSelect').value;
+            const usernameField = document.getElementById('usernameField');
+            const nimField = document.getElementById('nimField');
+            const nipField = document.getElementById('nipField');
+
+            // Sembunyikan semua field
+            usernameField.style.display = 'none';
+            nimField.style.display = 'none';
+            nipField.style.display = 'none';
+
+            // Tampilkan field sesuai role
+            switch(role) {
+                case 'admin':
+                    usernameField.style.display = 'block';
+                    break;
+                case 'siswa':
+                    nimField.style.display = 'block';
+                    break;
+                case 'guru':
+                    nipField.style.display = 'block';
+                    break;
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        window.onload = showFields;
+    </script>
   </body>
 </html>

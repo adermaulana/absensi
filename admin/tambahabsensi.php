@@ -13,21 +13,42 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_POST['simpan'])){
-    $simpan = mysqli_query($koneksi, "INSERT INTO absensi (id_siswa, id_kelas, status, keterangan, waktu_absen
-) VALUES ('$_POST[id_siswa]','$_POST[id_kelas]','$_POST[status]','$_POST[keterangan]','$_POST[waktu_absen]')");
+if(isset($_POST['simpan'])) {
+  $tanggal = $_POST['tanggal'];
+  $siswa_id = $_POST['siswa_id'];
+  $status = $_POST['status'];
+  $keterangan = $_POST['keterangan'];
+  $guru_id = $_POST['guru_id'];
+  
+  // Check if attendance already exists for this student on this date
+  $check = mysqli_query($koneksi, "SELECT id FROM absensi 
+                                  WHERE tanggal = '$tanggal' 
+                                  AND siswa_id = '$siswa_id'");
+                                  
+  if(mysqli_num_rows($check) > 0) {
+      echo "<script>
+              alert('Absensi untuk siswa ini pada tanggal tersebut sudah ada!');
+              document.location='absensi.php';
+           </script>";
+  } else {
+      // Insert new attendance
+      $query = "INSERT INTO absensi (tanggal, siswa_id, status, keterangan, guru_id) 
+               VALUES ('$tanggal', '$siswa_id', '$status', '$keterangan', '$guru_id')";
+      
+      $simpan = mysqli_query($koneksi, $query);
 
-    if($simpan){
-        echo "<script>
-                alert('Simpan data sukses!');
-                document.location='absensi.php';
-            </script>";
-    } else {
-        echo "<script>
-                alert('Simpan data Gagal!');
-                document.location='absensi.php';
-            </script>";
-    }
+      if($simpan) {
+          echo "<script>
+                  alert('Simpan data absensi berhasil!');
+                  document.location='absensi.php';
+               </script>";
+      } else {
+          echo "<script>
+                  alert('Simpan data absensi gagal!');
+                  document.location='absensi.php';
+               </script>";
+      }
+  }
 }
 
 ?>
@@ -165,57 +186,46 @@ if(isset($_POST['simpan'])){
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST">
+                  <form class="forms-sample" method="POST">
                     <div class="form-group">
-                        <label for="exampleSelectGender">Siswa</label>
-                        <select class="form-select" id="id_siswa" name="id_siswa" required>
-                          <option disabled selected>Pilih</option>
-                          <?php
-                                $no = 1;
-                                $tampil = mysqli_query($koneksi, "SELECT * FROM siswa");
-                                while($data = mysqli_fetch_array($tampil)):
-                          ?>
-                          <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
-                          <?php
-                            endwhile; 
-                          ?>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleSelectGender">Kelas</label>
-                        <select class="form-select" id="id_kelas" name="id_kelas" required>
-                          <option disabled selected>Pilih</option>
-                          <?php
-                                $no = 1;
-                                $tampil = mysqli_query($koneksi, "SELECT * FROM kelas");
-                                while($data = mysqli_fetch_array($tampil)):
+                        <label>Tanggal</label>
+                        <input type="date" class="form-control" name="tanggal" value="<?= date('Y-m-d') ?>" required readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Siswa</label>
+                        <select class="form-select" id="siswa_id" name="siswa_id" required>
+                            <option disabled selected>Pilih Siswa</option>
+                            <?php
+                            $tampil = mysqli_query($koneksi, "SELECT * FROM siswa");
+                            while($data = mysqli_fetch_array($tampil)):
                             ?>
-                          <option value="<?= $data['id'] ?>"><?= $data['kelas'] ?></option>
-                          <?php
-                            endwhile; 
-                          ?>
+                            <option value="<?= $data['id'] ?>"><?= $data['nama_lengkap'] ?></option>
+                            <?php endwhile; ?>
                         </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleSelectGender">Status</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
                         <select class="form-select" id="status" name="status" required>
-                          <option disabled selected>Pilih</option>
-                          <option value="hadir">Hadir</option>
-                          <option value="izin">Izin</option>
-                          <option value="sakit">Sakit</option>
-                          <option value="alpa">Alpa</option>
+                            <option disabled selected>Pilih Status</option>
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Alpa">Alpa</option>
                         </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleTextarea1">Keterangan</label>
-                        <textarea class="form-control" id="keterangan" name="keterangan" rows="4" required></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="kelas">Waktu Absen</label>
-                        <input type="time" class="form-control" id="waktu_absen" placeholder="Waktu Absen" name="waktu_absen" required>
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
-                    </form>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="4"></textarea>
+                    </div>
+
+                    <input type="hidden" name="guru_id" value="<?= $_SESSION['id_admin'] ?>">
+                    
+                    <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
+                    <a href="absensi.php" class="btn btn-light">Cancel</a>
+                  </form>
                   </div>
                 </div>
               </div>
@@ -261,5 +271,86 @@ if(isset($_POST['simpan'])){
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
+    
+    <script>
+      // Fungsi untuk validasi form
+    function validateForm(event) {
+        // Ambil element select
+        const siswaSelect = document.getElementById('siswa_id');
+        const statusSelect = document.getElementById('status');
+        
+        // Reset style error sebelumnya
+        siswaSelect.style.borderColor = '';
+        statusSelect.style.borderColor = '';
+        
+        // Hapus pesan error sebelumnya jika ada
+        removeErrorMessage(siswaSelect);
+        removeErrorMessage(statusSelect);
+        
+        let isValid = true;
+        
+        // Validasi field Siswa
+        if (siswaSelect.value === '' || siswaSelect.value === 'Pilih Siswa') {
+            showErrorMessage(siswaSelect, 'Silahkan pilih siswa');
+            siswaSelect.style.borderColor = 'red';
+            isValid = false;
+        }
+        
+        // Validasi field Status
+        if (statusSelect.value === '' || statusSelect.value === 'Pilih Status') {
+            showErrorMessage(statusSelect, 'Silahkan pilih status');
+            statusSelect.style.borderColor = 'red';
+            isValid = false;
+        }
+        
+        // Jika ada yang tidak valid, stop form submission
+        if (!isValid) {
+            event.preventDefault();
+        }
+        
+        return isValid;
+    }
+
+    // Fungsi untuk menampilkan pesan error
+    function showErrorMessage(element, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.color = 'red';
+        errorDiv.style.fontSize = '12px';
+        errorDiv.style.marginTop = '5px';
+        errorDiv.textContent = message;
+        element.parentNode.appendChild(errorDiv);
+    }
+
+    // Fungsi untuk menghapus pesan error
+    function removeErrorMessage(element) {
+        const errorMessage = element.parentNode.querySelector('.error-message');
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+    }
+
+    // Tambahkan event listener ke form
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', validateForm);
+        
+        // Tambahkan event listener untuk menghapus pesan error saat select berubah
+        const siswaSelect = document.getElementById('siswa_id');
+        const statusSelect = document.getElementById('status');
+        
+        siswaSelect.addEventListener('change', function() {
+            this.style.borderColor = '';
+            removeErrorMessage(this);
+        });
+        
+        statusSelect.addEventListener('change', function() {
+            this.style.borderColor = '';
+            removeErrorMessage(this);
+        });
+    });
+
+    </script>
+
   </body>
 </html>

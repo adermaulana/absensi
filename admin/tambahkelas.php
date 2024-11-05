@@ -14,20 +14,28 @@ if($_SESSION['status'] != 'login'){
 }
 
 if(isset($_POST['simpan'])){
-    $simpan = mysqli_query($koneksi, "INSERT INTO kelas (kelas
-) VALUES ('$_POST[kelas]')");
+  // Ambil data dari form
+  $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
+  $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']); 
+  $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
+  
+  // Query untuk insert data
+  $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
+            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
+            
+  $simpan = mysqli_query($koneksi, $query);
 
-    if($simpan){
-        echo "<script>
-                alert('Simpan data sukses!');
-                document.location='kelas.php';
-            </script>";
-    } else {
-        echo "<script>
-                alert('Simpan data Gagal!');
-                document.location='kelas.php';
-            </script>";
-    }
+  if($simpan){
+      echo "<script>
+              alert('Simpan data kelas berhasil!');
+              document.location='kelas.php';
+           </script>";
+  } else {
+      echo "<script>
+              alert('Simpan data kelas gagal!');
+              document.location='kelas.php';
+           </script>";
+  }
 }
 
 ?>
@@ -38,7 +46,7 @@ if(isset($_POST['simpan'])){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -159,19 +167,36 @@ if(isset($_POST['simpan'])){
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Kelas</h3>
+              <h3 class="page-title">Tambah Siswa</h3>
             </div>
             <div class="row">
               <div class="col-md-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <form class="forms-sample" method="POST">
+                  <form class="forms-sample" method="POST">
                       <div class="form-group">
-                        <label for="kelas">Kelas</label>
-                        <input type="text" class="form-control" id="kelas" placeholder="Kelas" name="kelas">
+                          <label for="nama_kelas">Nama Kelas</label>
+                          <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" required>
                       </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
-                    </form>
+                      <div class="form-group">
+                          <label for="wali_kelas_id">Wali Kelas</label>
+                          <select class="form-control" id="wali_kelas_id" name="wali_kelas_id" required>
+                              <option selected disabled>Pilih Wali Kelas</option>
+                              <?php
+                              $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
+                              while($guru = mysqli_fetch_array($query_guru)) {
+                                  echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
+                              }
+                              ?>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label for="tahun_ajaran">Tahun Ajaran</label>
+                          <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
+                      </div>
+                      <button type="submit" name="simpan" class="btn btn-primary me-2">Simpan</button>
+                      <a href="kelas.php" class="btn btn-light">Cancel</a>
+                  </form>
                   </div>
                 </div>
               </div>
@@ -218,4 +243,4 @@ if(isset($_POST['simpan'])){
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
   </body>
-</html>
+</html> 
