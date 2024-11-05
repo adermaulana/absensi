@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 01:51 AM
+-- Generation Time: Nov 05, 2024 at 02:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,8 @@ CREATE TABLE `absensi` (
 
 INSERT INTO `absensi` (`id`, `tanggal`, `siswa_id`, `status`, `keterangan`, `guru_id`, `created_at`) VALUES
 (1, '2024-11-05', 6, 'Hadir', 'Keren', 1, '2024-11-04 23:51:31'),
-(3, '2024-11-05', 7, 'Sakit', 'tes', 1, '2024-11-05 00:44:50');
+(3, '2024-11-05', 7, 'Sakit', 'tes', 1, '2024-11-05 00:44:50'),
+(4, '2024-11-05', 8, 'Izin', '', 1, '2024-11-05 13:33:31');
 
 -- --------------------------------------------------------
 
@@ -196,7 +197,7 @@ ALTER TABLE `siswa`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `admin`
