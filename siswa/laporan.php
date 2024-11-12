@@ -97,7 +97,7 @@ if($_SESSION['status'] != 'login'){
                 <li class="nav-item  nav-profile dropdown border-0">
                     <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
                     <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+                    <span class="profile-name"><?= $_SESSION['nama_siswa'] ?></span>
                     </a>
                     <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
                     <a class="dropdown-item" href="logout.php">
