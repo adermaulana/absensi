@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 02:37 PM
+-- Generation Time: Nov 12, 2024 at 02:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,9 +42,9 @@ CREATE TABLE `absensi` (
 --
 
 INSERT INTO `absensi` (`id`, `tanggal`, `siswa_id`, `status`, `keterangan`, `guru_id`, `created_at`) VALUES
-(1, '2024-11-05', 6, 'Hadir', 'Keren', 1, '2024-11-04 23:51:31'),
 (3, '2024-11-05', 7, 'Sakit', 'tes', 1, '2024-11-05 00:44:50'),
-(4, '2024-11-05', 8, 'Izin', '', 1, '2024-11-05 13:33:31');
+(4, '2024-11-05', 8, 'Izin', '', 1, '2024-11-05 13:33:31'),
+(6, '2024-11-07', 8, 'Hadir', 'tes', 2, '2024-11-07 22:36:52');
 
 -- --------------------------------------------------------
 
@@ -141,8 +141,7 @@ CREATE TABLE `siswa` (
 --
 
 INSERT INTO `siswa` (`id`, `password`, `nis`, `nama_lengkap`, `email`, `kelas_id`, `jenis_kelamin`, `alamat`, `nama_ortu`, `no_telp_ortu`, `created_at`) VALUES
-(6, '827ccb0eea8a706c4c34a16891f84e7b', '2021123456', 'Ade Rahmat Maulana', 'adermaulana15@gmail.com', 1, 'L', 'jalanan', 'Roan', '05394', '2024-11-04 23:51:19'),
-(7, '6bec9c852847242e384a4d5ac0962ba0', '202062', 'Udin', 'admin@gmail.com', 1, 'L', 'asd', 'ads', 'das', '2024-11-05 00:23:25'),
+(7, 'bcd724d15cde8c47650fda962968f102', '202062', 'Siswa', 'siswa@gmail.com', 1, 'L', 'asd', 'ads', 'das', '2024-11-05 00:23:25'),
 (8, '827ccb0eea8a706c4c34a16891f84e7b', '121212', 'Pengguna', 'pengajar@gmail.com', 2, 'L', 'sad', 'dsa', 'dsa', '2024-11-05 00:26:00');
 
 --
@@ -154,8 +153,8 @@ INSERT INTO `siswa` (`id`, `password`, `nis`, `nama_lengkap`, `email`, `kelas_id
 --
 ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `siswa_id` (`siswa_id`),
-  ADD KEY `guru_id` (`guru_id`);
+  ADD KEY `absensi_ibfk_1` (`siswa_id`),
+  ADD KEY `absensi_ibfk_2` (`guru_id`);
 
 --
 -- Indexes for table `admin`
@@ -178,7 +177,7 @@ ALTER TABLE `guru`
 --
 ALTER TABLE `kelas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `wali_kelas_id` (`wali_kelas_id`);
+  ADD KEY `kelas_ibfk_1` (`wali_kelas_id`);
 
 --
 -- Indexes for table `siswa`
@@ -187,7 +186,7 @@ ALTER TABLE `siswa`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nis` (`nis`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `kelas_id` (`kelas_id`);
+  ADD KEY `siswa_ibfk_1` (`kelas_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -197,7 +196,7 @@ ALTER TABLE `siswa`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -231,20 +230,20 @@ ALTER TABLE `siswa`
 -- Constraints for table `absensi`
 --
 ALTER TABLE `absensi`
-  ADD CONSTRAINT `absensi_ibfk_1` FOREIGN KEY (`siswa_id`) REFERENCES `siswa` (`id`),
-  ADD CONSTRAINT `absensi_ibfk_2` FOREIGN KEY (`guru_id`) REFERENCES `guru` (`id`);
+  ADD CONSTRAINT `absensi_ibfk_1` FOREIGN KEY (`siswa_id`) REFERENCES `siswa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `absensi_ibfk_2` FOREIGN KEY (`guru_id`) REFERENCES `guru` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `kelas`
 --
 ALTER TABLE `kelas`
-  ADD CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`wali_kelas_id`) REFERENCES `guru` (`id`);
+  ADD CONSTRAINT `kelas_ibfk_1` FOREIGN KEY (`wali_kelas_id`) REFERENCES `guru` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `siswa`
 --
 ALTER TABLE `siswa`
-  ADD CONSTRAINT `siswa_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`);
+  ADD CONSTRAINT `siswa_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
