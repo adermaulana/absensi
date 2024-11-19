@@ -1,191 +1,243 @@
 <?php
 
-    include 'koneksi.php';
+include 'koneksi.php';
 
-    session_start();
+session_start();
 
-    if(isset($_SESSION['status']) == 'login'){
+// Cek apakah pengguna sudah login
+if(isset($_SESSION['username_admin'])) {
+    $isLoggedIn = true;
+    $userName = $_SESSION['username_admin']; // Ambil nama user dari session
 
-        header("location:admin");
-    }
+} elseif(isset($_SESSION['nis'])) {
+  $isLoggedIn = true;
+  $userName = $_SESSION['nis']; // Ambil nama user dari session
 
-    if(isset($_POST['login'])) {
-      // Sanitasi input
-      $username = mysqli_real_escape_string($koneksi, $_POST['username']);
-      $nis = isset($_POST['nis']) ? mysqli_real_escape_string($koneksi, $_POST['nis']) : '';
-      $nip = isset($_POST['nip']) ? mysqli_real_escape_string($koneksi, $_POST['nip']) : '';
-      $password = md5($_POST['password']); // Tetap menggunakan MD5 sesuai sistem yang ada
-  
-      // Query dengan prepared statement untuk admin
-      $stmt = mysqli_prepare($koneksi, "SELECT * FROM admin WHERE username=? AND password=?");
-      mysqli_stmt_bind_param($stmt, "ss", $username, $password);
-      mysqli_stmt_execute($stmt);
-      $login = mysqli_stmt_get_result($stmt);
-      $cek = mysqli_num_rows($login);
-  
-      // Query dengan prepared statement untuk mahasiswa
-      $stmtSiswa = mysqli_prepare($koneksi, "SELECT * FROM siswa WHERE nis=? AND password=?");
-      mysqli_stmt_bind_param($stmtSiswa, "ss", $nis, $password);
-      mysqli_stmt_execute($stmtSiswa);
-      $loginSiswa = mysqli_stmt_get_result($stmtSiswa);
-      $cekSiswa = mysqli_num_rows($loginSiswa);
-  
-      // Query dengan prepared statement untuk dosen
-      $stmtGuru = mysqli_prepare($koneksi, "SELECT * FROM guru WHERE nip=? AND password=?");
-      mysqli_stmt_bind_param($stmtGuru, "ss", $nip, $password);
-      mysqli_stmt_execute($stmtGuru);
-      $loginGuru = mysqli_stmt_get_result($stmtGuru);
-      $cekGuru = mysqli_num_rows($loginGuru);
-  
-      if($cek > 0) {
-          $admin_data = mysqli_fetch_assoc($login);
-          $_SESSION['id_admin'] = $admin_data['id'];
-          $_SESSION['nama_admin'] = $admin_data['nama'];
-          $_SESSION['username_admin'] = $username;
-          $_SESSION['status'] = "login";
-          $_SESSION['role'] = "admin";
-          header('location:admin');
-          exit();
-  
-      } else if($cekSiswa > 0) {
-          $siswa_data = mysqli_fetch_assoc($loginSiswa);
-          $_SESSION['id_siswa'] = $siswa_data['id'];
-          $_SESSION['nama_siswa'] = $siswa_data['nama_lengkap'];
-          $_SESSION['nis'] = $siswa_data['nis'];
-          $_SESSION['status'] = "login";
-          $_SESSION['role'] = "siswa";
-          header('location:siswa');
-          exit();
-  
-      } else if($cekGuru > 0) {
-          $guru_data = mysqli_fetch_assoc($loginGuru);
-          $_SESSION['id_guru'] = $guru_data['id'];
-          $_SESSION['nama_guru'] = $guru_data['nama_lengkap'];
-          $_SESSION['nip'] = $guru_data['nip'];
-          $_SESSION['status'] = "login";
-          $_SESSION['role'] = "guru";
-          header('location:guru');
-          exit();
-  
-      } else {
-          echo "<script>
-              alert('Login Gagal');
-              window.location.href='index.php';
-          </script>";
-          exit();
-      }
-  }
+} elseif(isset($_SESSION['nip'])) {
+  $isLoggedIn = true;
+  $userName = $_SESSION['nip']; // Ambil nama user dari session
+} 
+else {
+    $isLoggedIn = false;
+}
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="assets/css/vertical-light-layout/style.css">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" href="assets/images/favicon.png" />
-  </head>
-  <body>
-    <div class="container-scroller">
-      <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
-          <div class="row flex-grow">
-            <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left p-5">
-                <h4 class="text-center">Login</h4>
-                <form class="pt-3" method="POST">
 
-                  <div class="form-group">
-                        <label class="form-label">Login Sebagai</label>
-                        <select class="form-control form-control-lg" id="roleSelect" onchange="showFields()">
-                            <option value="admin">Admin</option>
-                            <option value="siswa">Siswa</option>
-                            <option value="guru">Guru</option>
-                        </select>
-                  </div>
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Absensi</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-                  <div id="usernameField" class="form-group">
-                    <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Username">
-                  </div>
-                  <div id="nimField" class="form-group" style="display:none;">
-                    <input type="text" class="form-control form-control-lg" name="nis" id="nis" placeholder="NIS">
-                  </div>
-                  <div id="nipField" class="form-group" style="display:none;">
-                    <input type="text" class="form-control form-control-lg" name="nip" id="nip" placeholder="NIP">
-                  </div>
-                  <div class="form-group">
-                    <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password">
-                  </div>
+  <!-- Favicons -->
+  <link href="assets/home/img/apple-touch-icon.png" rel="icon">
+  <link href="assets/home/img/apple-touch-icon.png" rel="apple-touch-icon">
 
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-                  <div class="mt-3 d-grid gap-2">
-                    <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" name="login" type="submit">SIGN IN</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- content-wrapper ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
-    </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="assets/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="assets/js/off-canvas.js"></script>
-    <script src="assets/js/hoverable-collapse.js"></script>
-    <script src="assets/js/misc.js"></script>
-    <script src="assets/js/settings.js"></script>
-    <script src="assets/js/todolist.js"></script>
-    <!-- endinject -->
+  <!-- Vendor CSS Files -->
+  <link href="assets/home/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/home/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/home/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/home/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/home/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-    <script>
-        function showFields() {
-            const role = document.getElementById('roleSelect').value;
-            const usernameField = document.getElementById('usernameField');
-            const nimField = document.getElementById('nimField');
-            const nipField = document.getElementById('nipField');
+  <!-- Main CSS File -->
+  <link href="assets/home/css/main.css" rel="stylesheet">
 
-            // Sembunyikan semua field
-            usernameField.style.display = 'none';
-            nimField.style.display = 'none';
-            nipField.style.display = 'none';
+  <!-- =======================================================
+  * Template Name: Arsha
+  * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
+  * Updated: Jun 29 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 
-            // Tampilkan field sesuai role
-            switch(role) {
-                case 'admin':
-                    usernameField.style.display = 'block';
-                    break;
-                case 'siswa':
-                    nimField.style.display = 'block';
-                    break;
-                case 'guru':
-                    nipField.style.display = 'block';
-                    break;
-            }
+  <style>
+      .jumbotron {
+          background: url(assets/images/sma.jpg);
+          z-index: 0;
+      }
+
+      .jumbotron::after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-image: linear-gradient(to bottom, rgba(0,0,0,9), rgba(0,0,0,0));
+          bottom: 0;
+          pointer-events: none;
+      }
+
+      .tulisan {
+          position: relative; /* Relative to .jumbotron */
+          z-index: 2; /* Place the text above the overlay */
+          color: white; /* Make the text white to stand out against the dark overlay */
         }
 
-        // Jalankan saat halaman dimuat
-        window.onload = showFields;
-    </script>
-  </body>
+      .highlight-text {
+        font-size: 2em; /* Adjust font size as needed */
+        text-align: center; /* Center the text */
+      }
+
+
+  </style>
+
+
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="index.php" class="logo d-flex align-items-center me-auto">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+         <img src="assets/images/tutwuri.png" alt="Tutwuri">
+        <h1 style="font-size:22px;" class="sitename">Absensi</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.php" class="active">Home</a></li>
+          <li><a href="absensi.php" class="active">Absensi</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+       <?php if($isLoggedIn): ?>
+          <?php if(isset($_SESSION['username_admin'])): ?>
+            <a class="btn-getstarted" href="admin">Dashboard</a>
+          <?php elseif(isset($_SESSION['nis'])): ?>
+            <a class="btn-getstarted" href="siswa">Dashboard</a>
+          <?php else: ?>
+            <a class="btn-getstarted" href="guru">Dashboard</a>
+          <?php endif; ?>
+       <?php else: ?>
+       <a class="btn-getstarted" href="login.php">Login</a>
+       <?php endif; ?>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero jumbotron section dark-background">
+
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-12 order-2 order-lg-1 d-flex flex-column justify-content-center tulisan" data-aos="zoom-out">
+                <h1 class="highlight-text">Sistem Absensi Digital yang Efisien dan Akurat</h1>
+                <p class="highlight-text">"Tingkatkan kedisiplinan dan efektivitas pencatatan kehadiran dengan sistem absensi digital kami. Mudah digunakan, real-time, dan dapat diandalkan untuk memantau kehadiran dengan lebih baik."</p>
+                <div class="d-flex">
+                    <a href="login.php" class="btn-get-started">Mulai Absen</a>
+                    <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Panduan Penggunaan</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </section><!-- /Hero Section -->
+
+
+
+    <!-- About Section -->
+    <section id="visimisi" class="about section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Visi & Misi</h2>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+            <p>
+            Mewujudkan generasi yang unggul dalam bidang Ilmu Pengetahuan dan Teknologi (IPTEK), iman dan Taqwa (1MTAQ), terampil dan mandiri serta berkarakter
+            </p>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <p>Membentuk karakter siswa berbudi pekerti luhur yang dilandasi iman dan taqwa</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+  </main>
+
+  <footer id="contact" class="footer">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-6 col-md-6 footer-about">
+          <a href="index.php" class="d-flex align-items-center">
+            <span class="sitename">Absensi</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Jl. Perintis Kemerdekaan</p>
+            <p>Sulawesi Selatan, Indonesia</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>0853xxx</span></p>
+            <p><strong>Email:</strong> <span>absen@gmail.com</span></p>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+          <h4>Follow Us</h4>
+          <p>Sosial Media</p>
+          <div class="social-links d-flex">
+            <a href="#contact"><i class="bi bi-twitter-x"></i></a>
+            <a href="#contact"><i class="bi bi-facebook"></i></a>
+            <a href="#contact"><i class="bi bi-instagram"></i></a>
+            <a href="#contact"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Arsha</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/home/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/home/vendor/php-email-form/validate.js"></script>
+  <script src="assets/home/vendor/aos/aos.js"></script>
+  <script src="assets/home/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/home/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/home/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/home/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/home/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/home/js/main.js"></script>
+
+</body>
+
 </html>
