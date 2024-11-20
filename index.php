@@ -135,7 +135,7 @@ else {
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-12 order-2 order-lg-1 d-flex flex-column justify-content-center tulisan" data-aos="zoom-out">
-                <h1 class="highlight-text">Sistem Absensi Digital yang Efisien dan Akurat</h1>
+                <h1 class="highlight-text">Sistem Informasi Absensi Siswa</h1>
                 <p class="highlight-text">"Tingkatkan kedisiplinan dan efektivitas pencatatan kehadiran dengan sistem absensi digital kami. Mudah digunakan, real-time, dan dapat diandalkan untuk memantau kehadiran dengan lebih baik."</p>
                 <div class="d-flex">
                     <a href="login.php" class="btn-get-started">Mulai Absen</a>
