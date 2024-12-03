@@ -78,12 +78,12 @@ if($_SESSION['status'] != 'login'){
         </ul>
       </div>
     </li>    
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" href="laporan.php">
         <i class="mdi mdi-file-document-box menu-icon"></i>
         <span class="menu-title">Laporan</span>
       </a>
-    </li>
+    </li> -->
   </ul>
 </nav>
       <!-- partial -->

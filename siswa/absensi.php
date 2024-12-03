@@ -78,12 +78,12 @@ if($_SESSION['status'] != 'login'){
         </ul>
       </div>
     </li>    
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" href="laporan.php">
         <i class="mdi mdi-file-document-box menu-icon"></i>
         <span class="menu-title">Laporan</span>
       </a>
-    </li>
+    </li> -->
   </ul>
 </nav>
       <!-- partial -->
@@ -154,7 +154,17 @@ if($_SESSION['status'] != 'login'){
                               <td><?= $no++ ?></td>
                               <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
                               <td><?= $data['nama_siswa'] ?></td>
-                              <td><?= $data['status'] ?></td>
+                              <td>
+                              <?php if($data['status'] == 'Hadir'): ?>
+                              <span class="badge badge-success"><?= $data['status'] ?></span>
+                              <?php elseif($data['status'] == 'Sakit'): ?>
+                                  <span class="badge badge-warning"><?= $data['status'] ?></span>
+                              <?php elseif($data['status'] == 'Izin'): ?>
+                                  <span class="badge badge-info"><?= $data['status'] ?></span>
+                              <?php else: ?>
+                                  <span class="badge badge-danger"><?= $data['status'] ?></span>
+                              <?php endif; ?>
+                              </td>
                               <td><?= $data['keterangan'] ?></td>
                               <td><?= $data['nama_lengkap'] ?></td>
                               <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>

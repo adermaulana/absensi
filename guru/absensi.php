@@ -15,6 +15,18 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
+
+  $hapus = mysqli_query($koneksi, "DELETE FROM absensi WHERE id = '$_GET[id]'");
+
+  if($hapus){
+      echo "<script>
+      alert('Hapus data sukses!');
+      document.location='absensi.php';
+      </script>";
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -191,9 +203,10 @@ if($_SESSION['status'] != 'login'){
                                           <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Hadir">Hadir</a>
                                           <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Sakit">Sakit</a>
                                           <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Izin">Izin</a>
-                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Alfa">Alfa</a>
+                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Alpa">Alpa</a>
                                           <!-- Tambahkan item tambahan jika diperlukan -->
                                       </div>
+                                      <a onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="absensi.php?hal=hapus&id=<?= $data['id'] ?>" class="btn btn-danger">Hapus</a>
                                   </div>
                               </td>
                           </tr>
