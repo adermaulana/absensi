@@ -233,6 +233,10 @@ if($_SESSION['status'] != 'login'){
                               <button type="submit" class="btn btn-primary mr-2">
                                   <i class="mdi mdi-filter"></i> Filter
                               </button>
+                              <a href="cetak_laporan.php?tanggal_awal=<?= isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '' ?>&tanggal_akhir=<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>" 
+                                class="btn btn-success" target="_blank">
+                                <i class="mdi mdi-printer"></i> Cetak
+                              </a>
                               <a href="?" class="btn btn-outline-secondary">
                                   <i class="mdi mdi-refresh"></i> Reset
                               </a>
