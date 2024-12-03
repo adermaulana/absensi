@@ -14,26 +14,32 @@ if($_SESSION['status'] != 'login'){
 }
 
 if(isset($_POST['simpan'])){
-  // Ambil data dari form
-  $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
-  $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']); 
-  $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
+  // Hash password using MD5
+  $password = md5($_POST['password']);
   
-  // Query untuk insert data
-  $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
-            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
-            
-  $simpan = mysqli_query($koneksi, $query);
+  // Get form data and escape strings to prevent SQL injection
+  $nip = mysqli_real_escape_string($koneksi, $_POST['nip']);
+  $nama_lengkap = mysqli_real_escape_string($koneksi, $_POST['nama_lengkap']);
+  $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+  $jenis_kelamin = mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin']);
+  $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
+
+  // Create SQL query
+  $simpan = mysqli_query($koneksi, "INSERT INTO guru 
+      (password, nip, nama_lengkap, email, jenis_kelamin, alamat) 
+      VALUES 
+      ('$password', '$nip', '$nama_lengkap', '$email', '$jenis_kelamin', '$alamat')"
+  );
 
   if($simpan){
       echo "<script>
-              alert('Simpan data kelas berhasil!');
-              document.location='kelas.php';
-           </script>";
+              alert('Data guru berhasil disimpan!');
+              document.location='guru.php';
+          </script>";
   } else {
       echo "<script>
-              alert('Simpan data kelas gagal!');
-              document.location='kelas.php';
+              alert('Gagal menyimpan data guru!');
+              document.location='guru.php';
            </script>";
   }
 }
@@ -101,7 +107,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
-    </li>       
+    </li>     
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -114,7 +120,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
         </ul>
       </div>
-    </li>   
+    </li>     
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="mdi mdi-contacts menu-icon"></i>
@@ -187,28 +193,38 @@ if(isset($_POST['simpan'])){
                 <div class="card">
                   <div class="card-body">
                   <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                          <label for="nama_kelas">Nama Kelas</label>
-                          <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="wali_kelas_id">Wali Kelas</label>
-                          <select class="form-control" id="wali_kelas_id" name="wali_kelas_id" required>
-                              <option selected disabled>Pilih Wali Kelas</option>
-                              <?php
-                              $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
-                              while($guru = mysqli_fetch_array($query_guru)) {
-                                  echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
-                              }
-                              ?>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="tahun_ajaran">Tahun Ajaran</label>
-                          <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Simpan</button>
-                      <a href="kelas.php" class="btn btn-light">Cancel</a>
+                    <div class="form-group">
+                      <label for="nama_lengkap">Nama Lengkap</label>
+                      <input type="text" class="form-control" id="nama_lengkap" placeholder="Nama Lengkap" name="nama_lengkap">
+                    </div>
+                    <div class="form-group">
+                      <label for="nip">NIP</label>
+                      <input type="text" class="form-control" id="nip" placeholder="Nomor Induk Pegawai" name="nip">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Email" name="email">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                    </div>
+                   
+                    <div class="form-group">
+                      <label for="jenis_kelamin">Jenis Kelamin</label>
+                      <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="alamat">Alamat</label>
+                      <textarea class="form-control" id="alamat" rows="4" placeholder="Alamat Lengkap" name="alamat"></textarea>
+                    </div>
+                   
+                    <button type="submit" name="simpan" class="btn btn-primary me-2">Submit</button>
+                    <a href="guru.php" class="btn btn-light">Cancel</a>
                   </form>
                   </div>
                 </div>

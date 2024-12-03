@@ -13,6 +13,18 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_GET['hal']) == "hapus"){
+
+  $hapus = mysqli_query($koneksi, "DELETE FROM absensi WHERE id = '$_GET[id]'");
+
+  if($hapus){
+      echo "<script>
+      alert('Hapus data sukses!');
+      document.location='absensi.php';
+      </script>";
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +86,19 @@ if($_SESSION['status'] != 'login'){
         <ul class="nav flex-column sub-menu">          
           <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
           <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
+        </ul>
+      </div>
+    </li>        
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
+        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+        <span class="menu-title">Guru</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-guru">
+        <ul class="nav flex-column sub-menu">          
+          <li class="nav-item"> <a class="nav-link" href="guru.php">Data Guru</a></li>
+          <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
         </ul>
       </div>
     </li>        
@@ -152,51 +177,66 @@ if($_SESSION['status'] != 'login'){
                     </p>
                     <div class="table-responsive">
                     <table class="table">
-                      <thead>
-                          <tr>
-                              <th>No</th>
-                              <th>Tanggal</th>
-                              <th>Nama Siswa</th>
-                              <th>Status</th>
-                              <th>Keterangan</th>
-                              <th>Nama Guru</th>
-                              <th>Waktu Input</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                      <?php
-                          $no = 1;
-                          $tampil = mysqli_query($koneksi, "SELECT a.*, 
-                                                          s.nama_lengkap as nama_siswa,
-                                                          g.nama_lengkap
-                                                          FROM absensi a
-                                                          JOIN siswa s ON a.siswa_id = s.id 
-                                                          JOIN guru g ON a.guru_id = g.id
-                                                          ORDER BY a.tanggal DESC, a.created_at DESC");
-                          while($data = mysqli_fetch_array($tampil)):
-                      ?>
-                          <tr>
-                              <td><?= $no++ ?></td>
-                              <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
-                              <td><?= $data['nama_siswa'] ?></td>
-                              <td>
-                              <?php if($data['status'] == 'Hadir'): ?>
-                              <span class="badge badge-success"><?= $data['status'] ?></span>
-                              <?php elseif($data['status'] == 'Sakit'): ?>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Nama Siswa</th>
+                            <th>Status</th>
+                            <th>Keterangan</th>
+                            <th>Nama Guru</th>
+                            <th>Waktu Input</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $no = 1;
+                        $tampil = mysqli_query($koneksi, "SELECT a.*, 
+                                                        s.nama_lengkap as nama_siswa,
+                                                        g.nama_lengkap
+                                                        FROM absensi a
+                                                        JOIN siswa s ON a.siswa_id = s.id 
+                                                        JOIN guru g ON a.guru_id = g.id
+                                                        ORDER BY a.tanggal DESC, a.created_at DESC");
+                        while($data = mysqli_fetch_array($tampil)):
+                    ?>
+                        <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
+                            <td><?= $data['nama_siswa'] ?></td>
+                            <td>
+                            <?php if($data['status'] == 'Hadir'): ?>
+                            <span class="badge badge-success"><?= $data['status'] ?></span>
+                            <?php elseif($data['status'] == 'Sakit'): ?>
                                 <span class="badge badge-warning"><?= $data['status'] ?></span>
-                              <?php elseif($data['status'] == 'Izin'): ?>
+                            <?php elseif($data['status'] == 'Izin'): ?>
                                 <span class="badge badge-info"><?= $data['status'] ?></span>
-                              <?php else: ?>
+                            <?php else: ?>
                                 <span class="badge badge-danger"><?= $data['status'] ?></span>
-                              <?php endif; ?>
-                              </td>
-                              <td><?= $data['keterangan'] ?></td>
-                              <td><?= $data['nama_lengkap'] ?></td>
-                              <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
-                          </tr>
-                      <?php endwhile; ?>
-                      </tbody>
-                    </table>
+                            <?php endif; ?>
+                            </td>
+                            <td><?= $data['keterangan'] ?></td>
+                            <td><?= $data['nama_lengkap'] ?></td>
+                            <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="actionDropdown<?= $data['id'] ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Ubah Status
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="actionDropdown<?= $data['id'] ?>">
+                                        <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Hadir">Hadir</a>
+                                        <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Sakit">Sakit</a>
+                                        <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Izin">Izin</a>
+                                        <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Alpa">Alpa</a>
+                                    </div>
+                                    <a onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="absensi.php?hal=hapus&id=<?= $data['id'] ?>" class="btn btn-danger">Hapus</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                    </tbody>
+                </table>
                     </div>
                   </div>
                 </div>
@@ -219,6 +259,8 @@ if($_SESSION['status'] != 'login'){
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->

@@ -110,7 +110,20 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
-    </li>        
+    </li>     
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
+        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+        <span class="menu-title">Guru</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-guru">
+        <ul class="nav flex-column sub-menu">          
+          <li class="nav-item"> <a class="nav-link" href="guru.php">Data Guru</a></li>
+          <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
+        </ul>
+      </div>
+    </li>     
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="mdi mdi-contacts menu-icon"></i>

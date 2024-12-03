@@ -4,6 +4,8 @@ include '../koneksi.php';
 
 session_start();
 
+$id_guru = $_SESSION['id_guru'];
+
 if($_SESSION['status'] != 'login'){
 
     session_unset();
@@ -21,7 +23,7 @@ if($_SESSION['status'] != 'login'){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Breeze Admin</title>
+    <title>Guru</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -42,7 +44,7 @@ if($_SESSION['status'] != 'login'){
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
-    <a class="sidebar-brand brand-logo" href="index.html"><img src="../assets/images/logo.svg" alt="logo" /></a>
+    <a class="sidebar-brand brand-logo" href="index.php"><img src="../assets/images/logo.svg" alt="logo" /></a>
     <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
   </div>
   <ul class="nav">
@@ -54,7 +56,7 @@ if($_SESSION['status'] != 'login'){
           <!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column pe-3">
-          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
+          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_guru'] ?></span>
         </div>
       </a>
     </li>
@@ -73,36 +75,9 @@ if($_SESSION['status'] != 'login'){
       <div class="collapse" id="ui-basic">
         <ul class="nav flex-column sub-menu">          
           <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
-    </li>     
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-        <span class="menu-title">Guru</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-guru">
-        <ul class="nav flex-column sub-menu">          
-          <li class="nav-item"> <a class="nav-link" href="guru.php">Data Guru</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
-        </ul>
-      </div>
-    </li>     
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-        <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Kelas</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="icons">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>                            
-          <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>                            
-        </ul>
-      </div>
-    </li>
+    </li>        
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
         <i class="mdi mdi-format-list-bulleted menu-icon"></i>
@@ -128,28 +103,28 @@ if($_SESSION['status'] != 'login'){
       <div class="container-fluid page-body-wrapper">        
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
-            <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-                <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
-                <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
-                <i class="mdi mdi-menu"></i>
-                </button>
-                <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-                <li class="nav-item  nav-profile dropdown border-0">
-                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-                    <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
-                    </a>
-                    <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="logout.php">
-                        Signout </a>
-                    </div>
-                </li>
-                </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-                <span class="mdi mdi-menu"></span>
-                </button>
-            </div>
-            </nav>
+  <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+    <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+    <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
+      <i class="mdi mdi-menu"></i>
+    </button>
+    <ul class="navbar-nav navbar-nav-right ml-lg-auto">
+      <li class="nav-item  nav-profile dropdown border-0">
+        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+          <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
+          <span class="profile-name"><?= $_SESSION['nama_guru'] ?></span>
+        </a>
+        <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+          <a class="dropdown-item" href="logout.php">
+             Signout</a>
+        </div>
+      </li>
+    </ul>
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+      <span class="mdi mdi-menu"></span>
+    </button>
+  </div>
+</nav>
         <!-- partial -->
         <div class="main-panel">
         <div class="content-wrapper">
@@ -179,24 +154,7 @@ if($_SESSION['status'] != 'login'){
                                         value="<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>">
                               </div>
                           </div>
-                          <div class="col-md-3">
-                              <div class="form-group">
-                                  <label>Kelas</label>
-                                  <select name="kelas_id" class="form-control">
-                                      <option value="">Semua Kelas</option>
-                                      <?php
-                                      // Query to fetch all classes
-                                      $kelas_query = mysqli_query($koneksi, "SELECT id, nama_kelas FROM kelas");
-                                      while($kelas = mysqli_fetch_array($kelas_query)):
-                                      ?>
-                                      <option value="<?= $kelas['id'] ?>" 
-                                          <?= (isset($_GET['kelas_id']) && $_GET['kelas_id'] == $kelas['id']) ? 'selected' : '' ?>>
-                                          <?= $kelas['nama_kelas'] ?>
-                                      </option>
-                                      <?php endwhile; ?>
-                                  </select>
-                              </div>
-                          </div>
+                         
                           <div class="col-md-3">
                               <div class="form-group">
                                   <label>Status</label>
@@ -247,7 +205,6 @@ if($_SESSION['status'] != 'login'){
                           <th>No</th>
                           <th>Tanggal</th>
                           <th>Nama Siswa</th>
-                          <th>Kelas</th>
                           <th>Status</th>
                           <th>Keterangan</th>
                           <th>Nama Guru</th>
@@ -266,7 +223,7 @@ if($_SESSION['status'] != 'login'){
                                 JOIN guru g ON a.guru_id = g.id
                                 JOIN kelas k ON s.kelas_id = k.id";
 
-                      $conditions = [];
+                      $conditions = ["a.guru_id = '$id_guru'"];
 
                       // Tambahkan filter tanggal jika ada
                       if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])) {
@@ -276,12 +233,6 @@ if($_SESSION['status'] != 'login'){
                         if(!empty($tanggal_awal) && !empty($tanggal_akhir)) {
                           $conditions[] = "a.tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
                         }
-                      }
-
-                      // Kelas filter
-                      if(isset($_GET['kelas_id']) && !empty($_GET['kelas_id'])) {
-                        $kelas_id = $_GET['kelas_id'];
-                        $conditions[] = "s.kelas_id = '$kelas_id'";
                       }
 
                       // Status filter
@@ -310,7 +261,6 @@ if($_SESSION['status'] != 'login'){
                           <td><?= $no++ ?></td>
                           <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
                           <td><?= $data['nama_siswa'] ?></td>
-                          <td><?= $data['nama_kelas'] ?></td>
                           <td>
                             <?php if($data['status'] == 'Hadir'): ?>
                               <span class="badge badge-success"><?= $data['status'] ?></span>

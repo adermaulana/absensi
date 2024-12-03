@@ -147,8 +147,8 @@ if($_SESSION['status'] != 'login'){
                               <th>Nama Siswa</th>
                               <th>Status</th>
                               <th>Keterangan</th>
-                              <th>Nama Guru</th>
                               <th>Waktu Input</th>
+                              <th>Aksi</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -169,10 +169,33 @@ if($_SESSION['status'] != 'login'){
                               <td><?= $no++ ?></td>
                               <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
                               <td><?= $data['nama_siswa'] ?></td>
-                              <td><?= $data['status'] ?></td>
+                              <td>
+                              <?php if($data['status'] == 'Hadir'): ?>
+                              <span class="badge badge-success"><?= $data['status'] ?></span>
+                              <?php elseif($data['status'] == 'Sakit'): ?>
+                                  <span class="badge badge-warning"><?= $data['status'] ?></span>
+                              <?php elseif($data['status'] == 'Izin'): ?>
+                                  <span class="badge badge-info"><?= $data['status'] ?></span>
+                              <?php else: ?>
+                                  <span class="badge badge-danger"><?= $data['status'] ?></span>
+                              <?php endif; ?>
+                              </td>
                               <td><?= $data['keterangan'] ?></td>
-                              <td><?= $data['nama_lengkap'] ?></td>
                               <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
+                              <td>
+                                  <div class="dropdown">
+                                      <button class="btn btn-secondary dropdown-toggle" type="button" id="actionDropdown<?= $data['id'] ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          Ubah Status
+                                      </button>
+                                      <div class="dropdown-menu dropdown-scroll" aria-labelledby="actionDropdown<?= $data['id'] ?>">
+                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Hadir">Hadir</a>
+                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Sakit">Sakit</a>
+                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Izin">Izin</a>
+                                          <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Alfa">Alfa</a>
+                                          <!-- Tambahkan item tambahan jika diperlukan -->
+                                      </div>
+                                  </div>
+                              </td>
                           </tr>
                       <?php endwhile; ?>
                       </tbody>
@@ -200,6 +223,8 @@ if($_SESSION['status'] != 'login'){
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
     <script src="../assets/vendors/chart.js/Chart.min.js"></script>

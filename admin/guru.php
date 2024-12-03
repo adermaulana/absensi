@@ -13,28 +13,15 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_POST['simpan'])){
-  // Ambil data dari form
-  $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
-  $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']); 
-  $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
-  
-  // Query untuk insert data
-  $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
-            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
-            
-  $simpan = mysqli_query($koneksi, $query);
+if(isset($_GET['hal']) == "hapus"){
 
-  if($simpan){
+  $hapus = mysqli_query($koneksi, "DELETE FROM guru WHERE id = '$_GET[id]'");
+
+  if($hapus){
       echo "<script>
-              alert('Simpan data kelas berhasil!');
-              document.location='kelas.php';
-           </script>";
-  } else {
-      echo "<script>
-              alert('Simpan data kelas gagal!');
-              document.location='kelas.php';
-           </script>";
+      alert('Hapus data sukses!');
+      document.location='guru.php';
+      </script>";
   }
 }
 
@@ -101,7 +88,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
-    </li>       
+    </li>      
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -114,7 +101,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
         </ul>
       </div>
-    </li>   
+    </li>    
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="mdi mdi-contacts menu-icon"></i>
@@ -166,7 +153,7 @@ if(isset($_POST['simpan'])){
                     </a>
                     <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
                     <a class="dropdown-item" href="logout.php">
-                        Signout </a>
+                       Signout </a>
                     </div>
                 </li>
                 </ul>
@@ -175,41 +162,57 @@ if(isset($_POST['simpan'])){
                 </button>
             </div>
             </nav>
-
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Siswa</h3>
+              <h3 class="page-title">Kelas</h3>
             </div>
             <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
+              <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                  <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                          <label for="nama_kelas">Nama Kelas</label>
-                          <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="wali_kelas_id">Wali Kelas</label>
-                          <select class="form-control" id="wali_kelas_id" name="wali_kelas_id" required>
-                              <option selected disabled>Pilih Wali Kelas</option>
-                              <?php
-                              $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
-                              while($guru = mysqli_fetch_array($query_guru)) {
-                                  echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
-                              }
-                              ?>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="tahun_ajaran">Tahun Ajaran</label>
-                          <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Simpan</button>
-                      <a href="kelas.php" class="btn btn-light">Cancel</a>
-                  </form>
+                    <h4 class="card-title">Data Guru</h4>
+                    <a class="btn btn-success" href="tambahguru.php">Tambah Guru</a>
+                    </p>
+                    <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                          <tr>
+                              <th>No</th>
+                              <th>NIP</th>
+                              <th>Nama Lengkap</th>
+                              <th>Email</th>
+                              <th>Jenis Kelamin</th>
+                              <th>Alamat</th>
+                              <th>Tanggal Daftar</th>
+                              <th>Aksi</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                          $no = 1;
+                          $tampil = mysqli_query($koneksi, "SELECT * FROM guru");
+                          while($data = mysqli_fetch_array($tampil)):
+                      ?>
+                          <tr>
+                              <td><?= $no++ ?></td>
+                              <td><?= $data['nip'] ?></td>
+                              <td><?= $data['nama_lengkap'] ?></td>
+                              <td><?= $data['email'] ?></td>
+                              <td><?= $data['jenis_kelamin'] ?></td>
+                              <td><?= $data['alamat'] ?></td>
+                              <td><?= date('d-m-Y', strtotime($data['created_at'])) ?></td>
+                              <td>
+                                  <a class="btn btn-warning" href="editguru.php?id=<?= $data['id']?>">Edit</a>
+                                  <a class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" 
+                                    href="guru.php?hal=hapus&id=<?= $data['id']?>">Hapus</a>
+                              </td>
+                          </tr>
+                      <?php endwhile; ?>
+                      </tbody>
+                  </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -256,4 +259,4 @@ if(isset($_POST['simpan'])){
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
   </body>
-</html> 
+</html>

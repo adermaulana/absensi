@@ -13,30 +13,51 @@ if($_SESSION['status'] != 'login'){
 
 }
 
-if(isset($_POST['simpan'])){
-  // Ambil data dari form
-  $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
-  $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']); 
-  $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
-  
-  // Query untuk insert data
-  $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
-            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
-            
-  $simpan = mysqli_query($koneksi, $query);
+$id = $_GET['id'];
+$query = mysqli_query($koneksi, "SELECT * FROM guru WHERE id='$id'");
+$data = mysqli_fetch_array($query);
 
-  if($simpan){
+if(isset($_POST['update'])){
+  $guru_id = $_POST['guru_id'];
+  
+  // Base query without password
+  $query = "UPDATE guru SET 
+      nip = '".mysqli_real_escape_string($koneksi, $_POST['nip'])."',
+      nama_lengkap = '".mysqli_real_escape_string($koneksi, $_POST['nama_lengkap'])."',
+      email = '".mysqli_real_escape_string($koneksi, $_POST['email'])."',
+      jenis_kelamin = '".mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin'])."',
+      alamat = '".mysqli_real_escape_string($koneksi, $_POST['alamat'])."'
+      WHERE id = '$guru_id'";
+
+  // If password is filled, update password
+  if(!empty($_POST['password'])){
+      $password = md5($_POST['password']);
+      $query = "UPDATE guru SET 
+          nip = '".mysqli_real_escape_string($koneksi, $_POST['nip'])."',
+          nama_lengkap = '".mysqli_real_escape_string($koneksi, $_POST['nama_lengkap'])."',
+          password = '$password',
+          email = '".mysqli_real_escape_string($koneksi, $_POST['email'])."',
+          jenis_kelamin = '".mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin'])."',
+          alamat = '".mysqli_real_escape_string($koneksi, $_POST['alamat'])."'
+          WHERE id = '$guru_id'";
+  }
+
+  $update = mysqli_query($koneksi, $query);
+
+  if($update){
       echo "<script>
-              alert('Simpan data kelas berhasil!');
-              document.location='kelas.php';
+              alert('Update data sukses!');
+              document.location='guru.php';
            </script>";
   } else {
       echo "<script>
-              alert('Simpan data kelas gagal!');
-              document.location='kelas.php';
+              alert('Update data gagal!');
+              document.location='guru.php';
            </script>";
   }
 }
+
+
 
 ?>
 
@@ -46,7 +67,7 @@ if(isset($_POST['simpan'])){
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin</title>
+    <title>Breeze Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
@@ -101,7 +122,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
         </ul>
       </div>
-    </li>       
+    </li>
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -114,7 +135,7 @@ if(isset($_POST['simpan'])){
           <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
         </ul>
       </div>
-    </li>   
+    </li>          
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
         <i class="mdi mdi-contacts menu-icon"></i>
@@ -187,28 +208,38 @@ if(isset($_POST['simpan'])){
                 <div class="card">
                   <div class="card-body">
                   <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                          <label for="nama_kelas">Nama Kelas</label>
-                          <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="wali_kelas_id">Wali Kelas</label>
-                          <select class="form-control" id="wali_kelas_id" name="wali_kelas_id" required>
-                              <option selected disabled>Pilih Wali Kelas</option>
-                              <?php
-                              $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
-                              while($guru = mysqli_fetch_array($query_guru)) {
-                                  echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
-                              }
-                              ?>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="tahun_ajaran">Tahun Ajaran</label>
-                          <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Simpan</button>
-                      <a href="kelas.php" class="btn btn-light">Cancel</a>
+                    <div class="form-group">
+                      <label for="nama_lengkap">Nama Lengkap</label>
+                      <input type="text" class="form-control" id="nama_lengkap" placeholder="Nama Lengkap" name="nama_lengkap" value="<?= $data['nama_lengkap'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="nip">NIP</label>
+                      <input type="text" class="form-control" id="nip" placeholder="Nomor Induk Pegawai" name="nip" value="<?= $data['nip'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="<?= $data['email'] ?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Kosongkan jika tidak ingin mengubah password" name="password">
+                      <small class="text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="jenis_kelamin">Jenis Kelamin</label>
+                      <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L" <?= ($data['jenis_kelamin'] == 'L') ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= ($data['jenis_kelamin'] == 'P') ? 'selected' : '' ?>>Perempuan</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="alamat">Alamat</label>
+                      <textarea class="form-control" id="alamat" rows="4" placeholder="Alamat Lengkap" name="alamat"><?= $data['alamat'] ?></textarea>
+                    </div>
+                    <input type="hidden" name="guru_id" value="<?= $data['id'] ?>">
+                    <button type="submit" name="update" class="btn btn-primary me-2">Update</button>
+                    <a href="guru.php" class="btn btn-light">Cancel</a>
                   </form>
                   </div>
                 </div>
