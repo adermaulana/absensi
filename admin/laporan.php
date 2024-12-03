@@ -151,51 +151,80 @@ if($_SESSION['status'] != 'login'){
                   
                   <!-- Form Filter -->
                   <form method="GET" action="" class="mb-4">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label>Tanggal Awal</label>
-                          <input type="date" name="tanggal_awal" class="form-control" value="<?= isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '' ?>">
-                        </div>
+                      <div class="row">
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <label>Tanggal Awal</label>
+                                  <input type="date" name="tanggal_awal" class="form-control" 
+                                        value="<?= isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '' ?>">
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <label>Tanggal Akhir</label>
+                                  <input type="date" name="tanggal_akhir" class="form-control" 
+                                        value="<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>">
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <label>Kelas</label>
+                                  <select name="kelas_id" class="form-control">
+                                      <option value="">Semua Kelas</option>
+                                      <?php
+                                      // Query to fetch all classes
+                                      $kelas_query = mysqli_query($koneksi, "SELECT id, nama_kelas FROM kelas");
+                                      while($kelas = mysqli_fetch_array($kelas_query)):
+                                      ?>
+                                      <option value="<?= $kelas['id'] ?>" 
+                                          <?= (isset($_GET['kelas_id']) && $_GET['kelas_id'] == $kelas['id']) ? 'selected' : '' ?>>
+                                          <?= $kelas['nama_kelas'] ?>
+                                      </option>
+                                      <?php endwhile; ?>
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <label>Status</label>
+                                  <select name="status" class="form-control">
+                                      <option value="">Semua Status</option>
+                                      <option value="Hadir" <?= (isset($_GET['status']) && $_GET['status'] == 'Hadir') ? 'selected' : '' ?>>Hadir</option>
+                                      <option value="Sakit" <?= (isset($_GET['status']) && $_GET['status'] == 'Sakit') ? 'selected' : '' ?>>Sakit</option>
+                                      <option value="Izin" <?= (isset($_GET['status']) && $_GET['status'] == 'Izin') ? 'selected' : '' ?>>Izin</option>
+                                      <option value="Alpa" <?= (isset($_GET['status']) && $_GET['status'] == 'Alpa') ? 'selected' : '' ?>>Alpa</option>
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <label>Nama Siswa</label>
+                                  <select name="nama_siswa" class="form-control">
+                                      <option value="">Semua Siswa</option>
+                                      <?php
+                                      // Query to fetch all student names
+                                      $siswa_query = mysqli_query($koneksi, "SELECT DISTINCT nama_lengkap FROM siswa ORDER BY nama_lengkap");
+                                      while($siswa = mysqli_fetch_array($siswa_query)):
+                                      ?>
+                                      <option value="<?= htmlspecialchars($siswa['nama_lengkap']) ?>" 
+                                          <?= (isset($_GET['nama_siswa']) && $_GET['nama_siswa'] == $siswa['nama_lengkap']) ? 'selected' : '' ?>>
+                                          <?= htmlspecialchars($siswa['nama_lengkap']) ?>
+                                      </option>
+                                      <?php endwhile; ?>
+                                  </select>
+                              </div>
+                          </div>
                       </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label>Tanggal Akhir</label>
-                          <input type="date" name="tanggal_akhir" class="form-control" value="<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>">
-                        </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <button type="submit" class="btn btn-primary mr-2">
+                                  <i class="mdi mdi-filter"></i> Filter
+                              </button>
+                              <a href="?" class="btn btn-outline-secondary">
+                                  <i class="mdi mdi-refresh"></i> Reset
+                              </a>
+                          </div>
                       </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label>&nbsp;</label><br>
-                          <button type="submit" class="btn btn-primary">
-                            <i class="mdi mdi-filter"></i> Filter
-                          </button>
-                            <a href="cetak_laporan.php?tanggal_awal=<?= isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : '' ?>&tanggal_akhir=<?= isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : '' ?>" 
-                              class="btn btn-success" target="_blank">
-                              <i class="mdi mdi-printer"></i> Cetak
-                            </a>
-                          <?php if(isset($_GET['tanggal_awal'])): ?>
-                            <a href="?" class="btn btn-outline-secondary">
-                              <i class="mdi mdi-refresh"></i> Reset
-                            </a>
-                          <?php endif; ?>
-                          
-                          <!-- Tombol Export Excel -->
-                          <?php if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])): ?>
-                            <!-- <a href="export_excel.php?tanggal_awal=<?= $_GET['tanggal_awal'] ?>&tanggal_akhir=<?= $_GET['tanggal_akhir'] ?>" 
-                               class="btn btn-success">
-                              <i class="mdi mdi-file-excel"></i> Export Excel
-                            </a> -->
-                          <?php else: ?>
-                            <!-- <a href="export_excel.php" class="btn btn-success">
-                              <i class="mdi mdi-file-excel"></i> Export Excel
-                            </a> -->
-                          <?php endif; ?>
-                        </div>
-                        
-                      </div>
-                      
-                    </div>
                   </form>
 
                   <div class="table-responsive">
@@ -205,6 +234,7 @@ if($_SESSION['status'] != 'login'){
                           <th>No</th>
                           <th>Tanggal</th>
                           <th>Nama Siswa</th>
+                          <th>Kelas</th>
                           <th>Status</th>
                           <th>Keterangan</th>
                           <th>Nama Guru</th>
@@ -213,34 +243,61 @@ if($_SESSION['status'] != 'login'){
                       </thead>
                       <tbody>
                       <?php
-                        $no = 1;
-                        $query = "SELECT a.*, 
-                                s.nama_lengkap as nama_siswa,
-                                g.nama_lengkap
+                      $no = 1;
+                      $query = "SELECT a.*, 
+                                  s.nama_lengkap as nama_siswa,
+                                  g.nama_lengkap as nama_guru,
+                                  k.nama_kelas
                                 FROM absensi a
                                 JOIN siswa s ON a.siswa_id = s.id 
-                                JOIN guru g ON a.guru_id = g.id";
+                                JOIN guru g ON a.guru_id = g.id
+                                JOIN kelas k ON s.kelas_id = k.id";
 
-                        // Tambahkan filter tanggal jika ada
-                        if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])) {
-                          $tanggal_awal = $_GET['tanggal_awal'];
-                          $tanggal_akhir = $_GET['tanggal_akhir'];
-                          
-                          if(!empty($tanggal_awal) && !empty($tanggal_akhir)) {
-                            $query .= " WHERE a.tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
-                          }
-                        }
+                      $conditions = [];
 
-                        $query .= " ORDER BY a.tanggal DESC, a.created_at DESC";
-                        $tampil = mysqli_query($koneksi, $query);
+                      // Tambahkan filter tanggal jika ada
+                      if(isset($_GET['tanggal_awal']) && isset($_GET['tanggal_akhir'])) {
+                        $tanggal_awal = $_GET['tanggal_awal'];
+                        $tanggal_akhir = $_GET['tanggal_akhir'];
                         
-                        if(mysqli_num_rows($tampil) > 0) {
-                          while($data = mysqli_fetch_array($tampil)):
+                        if(!empty($tanggal_awal) && !empty($tanggal_akhir)) {
+                          $conditions[] = "a.tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'";
+                        }
+                      }
+
+                      // Kelas filter
+                      if(isset($_GET['kelas_id']) && !empty($_GET['kelas_id'])) {
+                        $kelas_id = $_GET['kelas_id'];
+                        $conditions[] = "s.kelas_id = '$kelas_id'";
+                      }
+
+                      // Status filter
+                      if(isset($_GET['status']) && !empty($_GET['status'])) {
+                        $status = $_GET['status'];
+                        $conditions[] = "a.status = '$status'";
+                      }
+
+                      if(isset($_GET['nama_siswa']) && !empty($_GET['nama_siswa'])) {
+                          $nama_siswa = mysqli_real_escape_string($koneksi, $_GET['nama_siswa']);
+                          $conditions[] = "s.nama_lengkap = '$nama_siswa'";
+                      }
+
+                      // Tambahkan WHERE clause jika ada kondisi
+                      if(!empty($conditions)) {
+                        $query .= " WHERE " . implode(" AND ", $conditions);
+                      }
+
+                      $query .= " ORDER BY a.tanggal DESC, a.created_at DESC";
+                      $tampil = mysqli_query($koneksi, $query);
+
+                      if(mysqli_num_rows($tampil) > 0) {
+                        while($data = mysqli_fetch_array($tampil)):
                       ?>
                         <tr>
                           <td><?= $no++ ?></td>
                           <td><?= date('d-m-Y', strtotime($data['tanggal'])) ?></td>
                           <td><?= $data['nama_siswa'] ?></td>
+                          <td><?= $data['nama_kelas'] ?></td>
                           <td>
                             <?php if($data['status'] == 'Hadir'): ?>
                               <span class="badge badge-success"><?= $data['status'] ?></span>
@@ -253,7 +310,7 @@ if($_SESSION['status'] != 'login'){
                             <?php endif; ?>
                           </td>
                           <td><?= $data['keterangan'] ?></td>
-                          <td><?= $data['nama_lengkap'] ?></td>
+                          <td><?= $data['nama_guru'] ?></td>
                           <td><?= date('d-m-Y H:i', strtotime($data['created_at'])) ?></td>
                         </tr>
                       <?php 
