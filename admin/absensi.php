@@ -230,6 +230,7 @@ if(isset($_GET['hal']) == "hapus"){
                                         <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Izin">Izin</a>
                                         <a class="dropdown-item" href="ubah_status.php?id=<?= $data['id'] ?>&status=Alpa">Alpa</a>
                                     </div>
+                                    <a  href="editabsensi.php?hal=hapus&id=<?= $data['id'] ?>" class="btn btn-warning">Edit</a>
                                     <a onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data?')" href="absensi.php?hal=hapus&id=<?= $data['id'] ?>" class="btn btn-danger">Hapus</a>
                                 </div>
                             </td>
