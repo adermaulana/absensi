@@ -32,6 +32,7 @@ if (isset($_POST['update'])) {
     $query = "UPDATE absensi 
               SET tanggal = '$tanggal', 
                   status = '$status', 
+                  guru_id = '$guru_id', 
                   keterangan = '$keterangan' 
               WHERE id = '$id'";
 
@@ -241,6 +242,21 @@ if (isset($_POST['update'])) {
                                         </div>
 
                                         <div class="form-group">
+                                            <label>Guru</label>
+                                            <select class="form-select" id="guru_id" name="guru_id" required>
+                                                <option disabled selected>Pilih Guru</option>
+                                                <?php
+                            $tampil = mysqli_query($koneksi, "SELECT * FROM guru");
+                            while($data = mysqli_fetch_array($tampil)):
+                            ?>
+                                                <option value="<?= $data['id'] ?>"
+                                                    <?= $data['id'] == $edit_data['guru_id'] ? 'selected' : '' ?>><?= $data['nama_lengkap'] ?>
+                                                </option>
+                                                <?php endwhile; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
                                             <label>Status</label>
                                             <select class="form-select" id="status" name="status" required>
                                                 <option value="Hadir"
@@ -262,8 +278,6 @@ if (isset($_POST['update'])) {
                                             <label>Keterangan</label>
                                             <textarea class="form-control" id="keterangan" name="keterangan" rows="4"><?= $edit_data['keterangan'] ?></textarea>
                                         </div>
-
-                                        <input type="hidden" name="guru_id" value="<?= $_SESSION['id_admin'] ?>">
 
                                         <button type="submit" name="update"
                                             class="btn btn-primary me-2">Update</button>
