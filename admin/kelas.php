@@ -15,12 +15,12 @@ if($_SESSION['status'] != 'login'){
 
 if(isset($_GET['hal']) == "hapus"){
 
-  $hapus = mysqli_query($koneksi, "DELETE FROM siswa WHERE id = '$_GET[id]'");
+  $hapus = mysqli_query($koneksi, "DELETE FROM kelas WHERE id = '$_GET[id]'");
 
   if($hapus){
       echo "<script>
       alert('Hapus data sukses!');
-      document.location='siswa.php';
+      document.location='kelas.php';
       </script>";
   }
 }
