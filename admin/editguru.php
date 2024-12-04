@@ -201,7 +201,7 @@ if(isset($_POST['update'])){
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Tambah Siswa</h3>
+              <h3 class="page-title">Edit Guru</h3>
             </div>
             <div class="row">
               <div class="col-md-6 grid-margin stretch-card">
