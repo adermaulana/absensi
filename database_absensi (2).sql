@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2024 at 09:17 PM
+-- Generation Time: Dec 17, 2024 at 01:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,10 @@ CREATE TABLE `absensi` (
   `siswa_id` int(11) NOT NULL,
   `status` enum('Hadir','Izin','Sakit','Alpa') NOT NULL,
   `keterangan` text DEFAULT NULL,
-  `guru_id` int(11) NOT NULL,
+  `guru_id` int(11) DEFAULT NULL,
+  `latitude` decimal(10,8) NOT NULL,
+  `longitude` decimal(11,8) NOT NULL,
+  `waktu_absensi` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -41,8 +44,9 @@ CREATE TABLE `absensi` (
 -- Dumping data for table `absensi`
 --
 
-INSERT INTO `absensi` (`id`, `tanggal`, `siswa_id`, `status`, `keterangan`, `guru_id`, `created_at`) VALUES
-(8, '2024-12-03', 9, 'Alpa', 'ge', 7, '2024-12-03 20:16:46');
+INSERT INTO `absensi` (`id`, `tanggal`, `siswa_id`, `status`, `keterangan`, `guru_id`, `latitude`, `longitude`, `waktu_absensi`, `created_at`) VALUES
+(8, '2024-12-03', 9, 'Hadir', 'gewewws', 7, 0.00000000, 0.00000000, '2024-12-17 11:23:12', '2024-12-03 20:16:46'),
+(9, '2024-12-04', 10, 'Hadir', 'g', 8, 0.00000000, 0.00000000, '2024-12-17 11:23:12', '2024-12-04 15:06:54');
 
 -- --------------------------------------------------------
 
@@ -117,6 +121,19 @@ INSERT INTO `kelas` (`id`, `nama_kelas`, `wali_kelas_id`, `tahun_ajaran`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `lokasi_sekolah`
+--
+
+CREATE TABLE `lokasi_sekolah` (
+  `id` int(11) NOT NULL,
+  `latitude` decimal(10,8) NOT NULL,
+  `longitude` decimal(11,8) NOT NULL,
+  `radius_meter` decimal(10,2) NOT NULL DEFAULT 100.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `siswa`
 --
 
@@ -139,7 +156,8 @@ CREATE TABLE `siswa` (
 --
 
 INSERT INTO `siswa` (`id`, `password`, `nis`, `nama_lengkap`, `email`, `kelas_id`, `jenis_kelamin`, `alamat`, `nama_ortu`, `no_telp_ortu`, `created_at`) VALUES
-(9, '827ccb0eea8a706c4c34a16891f84e7b', '20234', 'Mawar', 'mawar@gmail.com', 3, 'P', 'Btp', 'Budi', '0853982032', '2024-12-03 19:50:16');
+(9, '827ccb0eea8a706c4c34a16891f84e7b', '20234', 'Mawar', 'mawar@gmail.com', 3, 'P', 'Btp', 'Budi', '0853982032', '2024-12-03 19:50:16'),
+(10, '149815eb972b3c370dee3b89d645ae14', '2323', 'Ade Rahmat Maulana', 'admin@gmail.com', 4, 'L', '23', '23', '32', '2024-12-04 14:13:18');
 
 --
 -- Indexes for dumped tables
@@ -177,6 +195,12 @@ ALTER TABLE `kelas`
   ADD KEY `kelas_ibfk_1` (`wali_kelas_id`);
 
 --
+-- Indexes for table `lokasi_sekolah`
+--
+ALTER TABLE `lokasi_sekolah`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `siswa`
 --
 ALTER TABLE `siswa`
@@ -193,7 +217,7 @@ ALTER TABLE `siswa`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -214,10 +238,16 @@ ALTER TABLE `kelas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `lokasi_sekolah`
+--
+ALTER TABLE `lokasi_sekolah`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
