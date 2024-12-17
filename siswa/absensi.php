@@ -15,6 +15,43 @@ if($_SESSION['status'] != 'login'){
 
 }
 
+if(isset($_POST['simpan'])) {
+    $tanggal = $_POST['tanggal'];
+    $siswa_id = $_POST['siswa_id'];
+    $status = $_POST['status'];
+    $keterangan = $_POST['keterangan'];
+    
+    // Check if attendance already exists for this student on this date
+    $check = mysqli_query($koneksi, "SELECT id FROM absensi 
+                                    WHERE tanggal = '$tanggal' 
+                                    AND siswa_id = '$siswa_id'");
+                                    
+    if(mysqli_num_rows($check) > 0) {
+        echo "<script>
+                alert('Absensi pada tanggal tersebut sudah ada!');
+                document.location='absensi.php';
+             </script>";
+    } else {
+        // Insert new attendance
+        $query = "INSERT INTO absensi (tanggal, siswa_id, status, keterangan, guru_id) 
+                 VALUES ('$tanggal', '$siswa_id', '$status', '$keterangan', '$guru_id')";
+        
+        $simpan = mysqli_query($koneksi, $query);
+  
+        if($simpan) {
+            echo "<script>
+                    alert('Simpan data absensi berhasil!');
+                    document.location='absensi.php';
+                 </script>";
+        } else {
+            echo "<script>
+                    alert('Simpan data absensi gagal!');
+                    document.location='absensi.php';
+                 </script>";
+        }
+    }
+  }
+
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +160,7 @@ if($_SESSION['status'] != 'login'){
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Data Absensi</h4>
+                    <a class="btn btn-success" href="tambahabsensi.php">Tambah Absensi</a>
                     <div class="table-responsive">
                     <table class="table">
                       <thead>

@@ -169,6 +169,12 @@ if (isset($_POST['update'])) {
                         <span class="menu-title">Laporan</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="sekolah.php">
+                        <i class="mdi mdi-file-document-box menu-icon"></i>
+                        <span class="menu-title">Atur Lokasi Sekolah</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- partial -->
@@ -250,7 +256,8 @@ if (isset($_POST['update'])) {
                             while($data = mysqli_fetch_array($tampil)):
                             ?>
                                                 <option value="<?= $data['id'] ?>"
-                                                    <?= $data['id'] == $edit_data['guru_id'] ? 'selected' : '' ?>><?= $data['nama_lengkap'] ?>
+                                                    <?= $data['id'] == $edit_data['guru_id'] ? 'selected' : '' ?>>
+                                                    <?= $data['nama_lengkap'] ?>
                                                 </option>
                                                 <?php endwhile; ?>
                                             </select>

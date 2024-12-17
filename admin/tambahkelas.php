@@ -4,45 +4,44 @@ include '../koneksi.php';
 
 session_start();
 
-if($_SESSION['status'] != 'login'){
-
+if ($_SESSION['status'] != 'login') {
     session_unset();
     session_destroy();
 
-    header("location:../");
-
+    header('location:../');
 }
 
-if(isset($_POST['simpan'])){
-  // Ambil data dari form
-  $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
-  $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']); 
-  $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
-  
-  // Query untuk insert data
-  $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
-            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
-            
-  $simpan = mysqli_query($koneksi, $query);
+if (isset($_POST['simpan'])) {
+    // Ambil data dari form
+    $nama_kelas = mysqli_real_escape_string($koneksi, $_POST['nama_kelas']);
+    $wali_kelas_id = mysqli_real_escape_string($koneksi, $_POST['wali_kelas_id']);
+    $tahun_ajaran = mysqli_real_escape_string($koneksi, $_POST['tahun_ajaran']);
 
-  if($simpan){
-      echo "<script>
+    // Query untuk insert data
+    $query = "INSERT INTO kelas (nama_kelas, wali_kelas_id, tahun_ajaran) 
+            VALUES ('$nama_kelas', '$wali_kelas_id', '$tahun_ajaran')";
+
+    $simpan = mysqli_query($koneksi, $query);
+
+    if ($simpan) {
+        echo "<script>
               alert('Simpan data kelas berhasil!');
               document.location='kelas.php';
            </script>";
-  } else {
-      echo "<script>
+    } else {
+        echo "<script>
               alert('Simpan data kelas gagal!');
               document.location='kelas.php';
            </script>";
-  }
+    }
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -61,173 +60,199 @@ if(isset($_POST['simpan'])){
     <link rel="stylesheet" href="../assets/css/vertical-light-layout/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="container-scroller">
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-  <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
-    <a class="sidebar-brand brand-logo" href="index.html"><img src="../assets/images/logo.svg" alt="logo" /></a>
-    <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img src="../assets/images/logo-mini.svg" alt="logo" /></a>
-  </div>
-  <ul class="nav">
-    <li class="nav-item nav-profile">
-      <a href="#" class="nav-link">
-        <div class="nav-profile-image">
-          <img src="../assets/images/faces/face1.jpg" alt="profile">
-          <span class="login-status online"></span>
-          <!--change to offline or busy as needed-->
-        </div>
-        <div class="nav-profile-text d-flex flex-column pe-3">
-          <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
-        </div>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="index.php">
-        <i class="mdi mdi-home menu-icon"></i>
-        <span class="menu-title">Dashboard</span>
-      </a>
-    </li>        
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-        <span class="menu-title">Siswa</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">          
-          <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
-        </ul>
-      </div>
-    </li>       
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-        <span class="menu-title">Guru</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-guru">
-        <ul class="nav flex-column sub-menu">          
-          <li class="nav-item"> <a class="nav-link" href="guru.php">Data Guru</a></li>
-          <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
-        </ul>
-      </div>
-    </li>   
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-        <i class="mdi mdi-contacts menu-icon"></i>
-        <span class="menu-title">Kelas</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="icons">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>                            
-          <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>                            
-        </ul>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
-        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-        <span class="menu-title">Absensi</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="forms">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>          
-          <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a></li>          
-        </ul>
-      </div>
-    </li>    
-    <li class="nav-item">
-      <a class="nav-link" href="laporan.php">
-        <i class="mdi mdi-file-document-box menu-icon"></i>
-        <span class="menu-title">Laporan</span>
-      </a>
-    </li>
-  </ul>
-</nav>
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">        
-        <!-- partial:partials/_navbar.html -->
-        <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
-            <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-                <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
-                <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button" data-toggle="minimize">
-                <i class="mdi mdi-menu"></i>
-                </button>
-                <ul class="navbar-nav navbar-nav-right ml-lg-auto">
-                <li class="nav-item  nav-profile dropdown border-0">
-                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown">
-                    <img class="nav-profile-img me-2" alt="" src="../assets/images/faces/face1.jpg">
-                    <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
+                <a class="sidebar-brand brand-logo" href="index.html"><img src="../assets/images/logo.svg"
+                        alt="logo" /></a>
+                <a class="sidebar-brand brand-logo-mini ps-4 pt-3" href="index.html"><img
+                        src="../assets/images/logo-mini.svg" alt="logo" /></a>
+            </div>
+            <ul class="nav">
+                <li class="nav-item nav-profile">
+                    <a href="#" class="nav-link">
+                        <div class="nav-profile-image">
+                            <img src="../assets/images/faces/face1.jpg" alt="profile">
+                            <span class="login-status online"></span>
+                            <!--change to offline or busy as needed-->
+                        </div>
+                        <div class="nav-profile-text d-flex flex-column pe-3">
+                            <span class="font-weight-medium mb-2"><?= $_SESSION['nama_admin'] ?></span>
+                        </div>
                     </a>
-                    <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="logout.php">
-                        Signout </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">
+                        <i class="mdi mdi-home menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                        aria-controls="ui-basic">
+                        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        <span class="menu-title">Siswa</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="siswa.php">Data Siswa</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="tambahsiswa.php">Tambah Siswa</a></li>
+                        </ul>
                     </div>
                 </li>
-                </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-                <span class="mdi mdi-menu"></span>
-                </button>
-            </div>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#ui-guru" aria-expanded="false"
+                        aria-controls="ui-basic">
+                        <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        <span class="menu-title">Guru</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-guru">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="guru.php">Data Guru</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="tambahguru.php">Tambah Guru</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false"
+                        aria-controls="icons">
+                        <i class="mdi mdi-contacts menu-icon"></i>
+                        <span class="menu-title">Kelas</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="icons">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="kelas.php">Data Kelas</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="tambahkelas.php">Tambah Kelas</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false"
+                        aria-controls="forms">
+                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        <span class="menu-title">Absensi</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="forms">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="absensi.php">Data Absensi</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="tambahabsensi.php">Tambah Absensi</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="laporan.php">
+                        <i class="mdi mdi-file-document-box menu-icon"></i>
+                        <span class="menu-title">Laporan</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="sekolah.php">
+                        <i class="mdi mdi-file-document-box menu-icon"></i>
+                        <span class="menu-title">Atur Lokasi Sekolah</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
+                <div class="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
+                    <a class="navbar-brand brand-logo-mini align-self-center d-lg-none" href="index.html"><img
+                            src="../../../assets/images/logo-mini.svg" alt="logo" /></a>
+                    <button class="navbar-toggler navbar-toggler align-self-center me-2" type="button"
+                        data-toggle="minimize">
+                        <i class="mdi mdi-menu"></i>
+                    </button>
+                    <ul class="navbar-nav navbar-nav-right ml-lg-auto">
+                        <li class="nav-item  nav-profile dropdown border-0">
+                            <a class="nav-link dropdown-toggle" id="profileDropdown" href="#"
+                                data-bs-toggle="dropdown">
+                                <img class="nav-profile-img me-2" alt=""
+                                    src="../assets/images/faces/face1.jpg">
+                                <span class="profile-name"><?= $_SESSION['nama_admin'] ?></span>
+                            </a>
+                            <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="logout.php">
+                                    Signout </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                        data-toggle="offcanvas">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                </div>
             </nav>
 
-        <!-- partial -->
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">Tambah Siswa</h3>
-            </div>
-            <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                  <form class="forms-sample" method="POST">
-                      <div class="form-group">
-                          <label for="nama_kelas">Nama Kelas</label>
-                          <input type="text" class="form-control" id="nama_kelas" placeholder="Nama Kelas" name="nama_kelas" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="wali_kelas_id">Wali Kelas</label>
-                          <select class="form-control" id="wali_kelas_id" name="wali_kelas_id" required>
-                              <option selected disabled>Pilih Wali Kelas</option>
-                              <?php
-                              $query_guru = mysqli_query($koneksi, "SELECT * FROM guru");
-                              while($guru = mysqli_fetch_array($query_guru)) {
-                                  echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
-                              }
-                              ?>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="tahun_ajaran">Tahun Ajaran</label>
-                          <input type="text" class="form-control" id="tahun_ajaran" placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
-                      </div>
-                      <button type="submit" name="simpan" class="btn btn-primary me-2">Simpan</button>
-                      <a href="kelas.php" class="btn btn-light">Cancel</a>
-                  </form>
-                  </div>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">Tambah Kelas</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form class="forms-sample" method="POST">
+                                        <div class="form-group">
+                                            <label for="nama_kelas">Nama Kelas</label>
+                                            <input type="text" class="form-control" id="nama_kelas"
+                                                placeholder="Nama Kelas" name="nama_kelas" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="wali_kelas_id">Wali Kelas</label>
+                                            <select class="form-control" id="wali_kelas_id" name="wali_kelas_id"
+                                                required>
+                                                <option selected disabled>Pilih Wali Kelas</option>
+                                                <?php
+                                                $query_guru = mysqli_query($koneksi, 'SELECT * FROM guru');
+                                                while ($guru = mysqli_fetch_array($query_guru)) {
+                                                    echo "<option value='$guru[id]'>$guru[nama_lengkap]</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tahun_ajaran">Tahun Ajaran</label>
+                                            <input type="text" class="form-control" id="tahun_ajaran"
+                                                placeholder="Contoh: 2023/2024" name="tahun_ajaran" required>
+                                        </div>
+                                        <button type="submit" name="simpan"
+                                            class="btn btn-primary me-2">Simpan</button>
+                                        <a href="kelas.php" class="btn btn-light">Cancel</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a
+                                href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights
+                            reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made
+                            with <i class="mdi mdi-heart text-danger"></i></span>
+                    </div>
+                </footer>
+                <!-- partial -->
             </div>
-          </div>
-          <!-- content-wrapper ends -->
-          <!-- partial:../../partials/_footer.html -->
-          <footer class="footer">
-  <div class="d-sm-flex justify-content-center justify-content-sm-between">
-    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights reserved.</span>
-    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
-  </div>
-</footer>
-          <!-- partial -->
+            <!-- main-panel ends -->
         </div>
-        <!-- main-panel ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
+        <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
@@ -255,5 +280,6 @@ if(isset($_POST['simpan'])){
     <script src="../assets/js/dashboard.js"></script>
     <script src="../assets/js/proBanner.js"></script>
     <!-- End custom js for this page -->
-  </body>
-</html> 
+</body>
+
+</html>

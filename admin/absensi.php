@@ -134,6 +134,12 @@ if(isset($_GET['hal']) == "hapus"){
         <span class="menu-title">Laporan</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="sekolah.php">
+        <i class="mdi mdi-file-document-box menu-icon"></i>
+        <span class="menu-title">Atur Lokasi Sekolah</span>
+      </a>
+    </li>
   </ul>
 </nav>
       <!-- partial -->
